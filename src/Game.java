@@ -3,7 +3,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import javax.swing.*;
 
-public class Player extends JPanel implements KeyListener {
+public class Game extends JPanel implements KeyListener {
     //PLAYER
     private static final int PLAYER_SIZE = 20;
     private static final int PLAYER_SPEED = 5;
@@ -24,9 +24,11 @@ public class Player extends JPanel implements KeyListener {
     private int score = 0;
     private boolean starter = true;
     private boolean shot = false;
+    private volatile boolean pause = false;
 
-    public Player() {
-        setBackground(Color.BLACK);
+    private final Point[] pixel;
+
+    public Game() {
         addKeyListener(this);
         setFocusable(true);
 
@@ -46,10 +48,24 @@ public class Player extends JPanel implements KeyListener {
         enemyThread = new Thread(this::enemyMovement);
         collisonThread = new Thread(this::collision);
 
+        pixel = new Point[1000];
+
+        for (int i = 0; i < pixel.length; i++) {
+            pixel[i] = new Point((int) (Math.random() * 500), (int) (Math.random() * 500));
+        }
     }
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+
+        g.setColor(Color.BLACK);
+        g.fillRect(0, 0, 500, 500);
+
+        g.setColor(Color.WHITE);
+        for (int i = 0; i < pixel.length; i++) {
+            g.fillRect(pixel[i].x, pixel[i].y, 1, 1);
+        }
+
         g.setColor(Color.YELLOW);
         g.fillRect(beamPos.x, beamPos.y, 5, -30);
 
@@ -168,7 +184,7 @@ public class Player extends JPanel implements KeyListener {
             panelEnemy_2.setBounds(enemyPos_2.x, enemyPos_2.y, ENEMY_SIZE, ENEMY_SIZE);
             panelEnemy_3.setBounds(enemyPos_3.x, enemyPos_3.y, ENEMY_SIZE, ENEMY_SIZE);
 
-            panelBeam.setBounds(beamPos.x, beamPos.y, 5, 30);
+            panelBeam.setBounds(beamPos.x, beamPos.y, 5, 5);
 
             if (panelBeam.bounds().intersects(panelEnemy_0.getBounds())) {
                 enemyPos_0.setLocation((int) (Math.random() * 470), 0);
