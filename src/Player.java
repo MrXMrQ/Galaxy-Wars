@@ -8,28 +8,22 @@ public class Player extends JPanel implements KeyListener {
     private static final int PLAYER_SIZE = 20;
     private static final int PLAYER_SPEED = 5;
 
-    private final Point playerPos;
-
     private int playerDirectionX;
     private int playerDirectionY;
 
     //ENEMY
     private static final int ENEMY_SIZE = 30;
-    private static final int ENEMY_SPEED = 2;
+    private static final int ENEMY_SPEED = 1;
 
-    private final Point enemyPos_0;
-    private final Point enemyPos_1;
-    private final Point enemyPos_2;
-    private final Point enemyPos_3;
+    //Point
+    private final Point enemyPos_0, enemyPos_1, enemyPos_2, enemyPos_3, beamPos, playerPos;
 
     //THREADS
-    Thread playerThread;
-    Thread enemyThread;
-    Thread collisonThread;
+    Thread playerThread, enemyThread, collisonThread;
 
     private int score = 0;
     private boolean starter = true;
-
+    private boolean shot = false;
 
     public Player() {
         setBackground(Color.BLACK);
@@ -41,10 +35,12 @@ public class Player extends JPanel implements KeyListener {
         playerDirectionX = 0;
         playerDirectionY = 0;
 
-        enemyPos_0 = new Point((int) (Math.random() * 500), 0);
-        enemyPos_1 = new Point((int) (Math.random() * 500), 0);
-        enemyPos_2 = new Point((int) (Math.random() * 500), 0);
-        enemyPos_3 = new Point((int) (Math.random() * 500), 0);
+        enemyPos_0 = new Point((int) (Math.random() * 470), 0);
+        enemyPos_1 = new Point((int) (Math.random() * 470), 0);
+        enemyPos_2 = new Point((int) (Math.random() * 470), 0);
+        enemyPos_3 = new Point((int) (Math.random() * 470), 0);
+
+        beamPos = new Point(playerPos.x + PLAYER_SIZE / 2 - 2, playerPos.y + PLAYER_SIZE);
 
         playerThread = new Thread(this::playerMovement);
         enemyThread = new Thread(this::enemyMovement);
@@ -54,6 +50,9 @@ public class Player extends JPanel implements KeyListener {
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        g.setColor(Color.YELLOW);
+        g.fillRect(beamPos.x, beamPos.y, 5, -30);
+
         g.setColor(Color.RED);
         g.fillRect(playerPos.x, playerPos.y, PLAYER_SIZE, PLAYER_SIZE);
 
@@ -66,6 +65,7 @@ public class Player extends JPanel implements KeyListener {
     }
 
     public void start() {
+        starter = false;
         playerThread.start();
         enemyThread.start();
         collisonThread.start();
@@ -78,11 +78,9 @@ public class Player extends JPanel implements KeyListener {
             case KeyEvent.VK_DOWN -> playerDirectionY = 1;
             case KeyEvent.VK_LEFT -> playerDirectionX = -1;
             case KeyEvent.VK_ENTER -> {
-                if (starter) {
-                    start();
-                    starter = false;
-                }
+                if (starter) start();
             }
+            case KeyEvent.VK_SPACE -> shot = true;
         }
     }
 
@@ -100,17 +98,16 @@ public class Player extends JPanel implements KeyListener {
         while (playerThread.isAlive()) {
             playerPos.x += playerDirectionX * PLAYER_SPEED;
             playerPos.y += playerDirectionY * PLAYER_SPEED;
-            if (playerPos.x < 0) {
-                playerPos.x = 0;
-            }
-            if (playerPos.y < 0) {
-                playerPos.y = 0;
-            }
-            if (playerPos.x > 465) {
-                playerPos.x = 465;
-            }
-            if (playerPos.y > 440) {
-                playerPos.y = 440;
+
+            if (playerPos.x < 0) playerPos.x = 0;
+            if (playerPos.y < 0) playerPos.y = 0;
+            if (playerPos.x > 465) playerPos.x = 465;
+            if (playerPos.y > 440) playerPos.y = 440;
+
+            if (!shot) beamPos.setLocation(playerPos.x + PLAYER_SIZE / 2 - 2, playerPos.y + PLAYER_SIZE);
+            else {
+                beamPos.y -= 10;
+                if (beamPos.y < 0) shot = false;
             }
             repaint();
             try {
@@ -129,23 +126,19 @@ public class Player extends JPanel implements KeyListener {
             enemyPos_3.y += ENEMY_SPEED + 1;
 
             if (enemyPos_0.y > 440) {
-                enemyPos_0.y = 0;
-                enemyPos_0.x = (int) (Math.random() * 470);
+                enemyPos_0.setLocation((int) (Math.random() * 470), 0);
                 score++;
             }
             if (enemyPos_1.y > 440) {
-                enemyPos_1.y = 0;
-                enemyPos_1.x = (int) (Math.random() * 470);
+                enemyPos_1.setLocation((int) (Math.random() * 470), 0);
                 score++;
             }
             if (enemyPos_2.y > 440) {
-                enemyPos_2.y = 0;
-                enemyPos_2.x = (int) (Math.random() * 470);
+                enemyPos_2.setLocation((int) (Math.random() * 470), 0);
                 score++;
             }
             if (enemyPos_3.y > 440) {
-                enemyPos_3.y = 0;
-                enemyPos_3.x = (int) (Math.random() * 470);
+                enemyPos_3.setLocation((int) (Math.random() * 470), 0);
                 score++;
             }
             repaint();
@@ -165,6 +158,8 @@ public class Player extends JPanel implements KeyListener {
         JPanel panelEnemy_2 = new JPanel();
         JPanel panelEnemy_3 = new JPanel();
 
+        JPanel panelBeam = new JPanel();
+
         while (collisonThread.isAlive()) {
             panelPlayer.setBounds(playerPos.x, playerPos.y, PLAYER_SIZE, PLAYER_SIZE);
 
@@ -172,15 +167,41 @@ public class Player extends JPanel implements KeyListener {
             panelEnemy_1.setBounds(enemyPos_1.x, enemyPos_1.y, ENEMY_SIZE, ENEMY_SIZE);
             panelEnemy_2.setBounds(enemyPos_2.x, enemyPos_2.y, ENEMY_SIZE, ENEMY_SIZE);
             panelEnemy_3.setBounds(enemyPos_3.x, enemyPos_3.y, ENEMY_SIZE, ENEMY_SIZE);
+            panelBeam.setBounds(beamPos.x, beamPos.y, 5, 30);
+
+            if (panelBeam.bounds().intersects(panelEnemy_0.getBounds())) {
+                enemyPos_0.setLocation((int) (Math.random() * 470), 0);
+                asteroidHitAction();
+            }
+            if (panelBeam.bounds().intersects(panelEnemy_1.getBounds())) {
+                enemyPos_1.setLocation((int) (Math.random() * 470), 0);
+                asteroidHitAction();
+            }
+            if (panelBeam.bounds().intersects(panelEnemy_2.getBounds())) {
+                enemyPos_2.setLocation((int) (Math.random() * 470), 0);
+                asteroidHitAction();
+            }
+            if (panelBeam.bounds().intersects(panelEnemy_3.getBounds())) {
+                enemyPos_3.setLocation((int) (Math.random() * 470), 0);
+                asteroidHitAction();
+            }
 
             if (panelPlayer.bounds().intersects(panelEnemy_0.getBounds()) || panelPlayer.bounds().intersects(panelEnemy_1.getBounds()) || panelPlayer.bounds().intersects(panelEnemy_2.getBounds()) || panelPlayer.bounds().intersects(panelEnemy_3.getBounds())) {
                 System.exit(1);
             }
+
             try {
                 Thread.sleep(5);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    public void asteroidHitAction() {
+        shot = false;
+        beamPos.setLocation(playerPos.x + PLAYER_SIZE / 2 - 2, playerPos.y + PLAYER_SIZE);
+        score += 10;
+        System.out.println(score);
     }
 }
