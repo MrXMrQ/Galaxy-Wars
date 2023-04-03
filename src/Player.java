@@ -99,9 +99,9 @@ public class Player extends JPanel implements KeyListener {
             playerPos.x += playerDirectionX * PLAYER_SPEED;
             playerPos.y += playerDirectionY * PLAYER_SPEED;
 
-            if (playerPos.x < 0) playerPos.x = 0;
+            if (playerPos.x < 0) playerPos.x = 465;
             if (playerPos.y < 0) playerPos.y = 0;
-            if (playerPos.x > 465) playerPos.x = 465;
+            if (playerPos.x > 465) playerPos.x = 0;
             if (playerPos.y > 440) playerPos.y = 440;
 
             if (!shot) beamPos.setLocation(playerPos.x + PLAYER_SIZE / 2 - 2, playerPos.y + PLAYER_SIZE);
@@ -167,6 +167,7 @@ public class Player extends JPanel implements KeyListener {
             panelEnemy_1.setBounds(enemyPos_1.x, enemyPos_1.y, ENEMY_SIZE, ENEMY_SIZE);
             panelEnemy_2.setBounds(enemyPos_2.x, enemyPos_2.y, ENEMY_SIZE, ENEMY_SIZE);
             panelEnemy_3.setBounds(enemyPos_3.x, enemyPos_3.y, ENEMY_SIZE, ENEMY_SIZE);
+
             panelBeam.setBounds(beamPos.x, beamPos.y, 5, 30);
 
             if (panelBeam.bounds().intersects(panelEnemy_0.getBounds())) {
