@@ -12,5 +12,6 @@ public class MyFrame extends JFrame {
 
         game = new Game();
         add(game);
+
     }
 }
