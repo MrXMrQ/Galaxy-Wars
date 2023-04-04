@@ -1,15 +1,29 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.Objects;
+import java.awt.event.*;
+import java.util.Objects ;
 
 public class TitleScreen {
     public static MyScreen myScreen;
+    public Game game;
 
     public TitleScreen() {
         myScreen = new MyScreen();
+        myScreen.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if(game != null) {
+                    game.handleKeyReleased(e);
+                }
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(game != null) {
+                    game.handleKeyPressed(e);
+                }
+            }
+        });
 
         JLayeredPane layeredPane = myScreen.getLayeredPane();
 
@@ -43,9 +57,8 @@ public class TitleScreen {
         labelButton_0.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                System.out.println("Staring game...");
                 layeredPane.removeAll();
-                Game game = new Game();
+                game = new Game();
                 layeredPane.add(game, Integer.valueOf(1));
                 layeredPane.repaint();
             }

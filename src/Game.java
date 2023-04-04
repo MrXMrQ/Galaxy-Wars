@@ -2,9 +2,10 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
+import java.security.Key;
 import javax.swing.*;
 
-public class Game extends JPanel implements KeyListener {
+public class Game extends JPanel {
     //PLAYER
     private static final int PLAYER_SIZE = 20;
     private static final int PLAYER_SPEED = 5;
@@ -25,13 +26,12 @@ public class Game extends JPanel implements KeyListener {
     private int score = 0;
     private boolean starter = true;
     private boolean shot = false;
-    private volatile boolean pause = false;
+    private final boolean pause = false;
 
     private final Point[] pixel;
 
     public Game() {
         setBounds(0, 0, 500, 500);
-        addKeyListener(this);
         setFocusable(true);
 
 
@@ -87,30 +87,6 @@ public class Game extends JPanel implements KeyListener {
         playerThread.start();
         enemyThread.start();
         collisonThread.start();
-    }
-
-    public void keyPressed(KeyEvent e) {
-        System.out.println("CHECK");
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_UP -> playerDirectionY = -1;
-            case KeyEvent.VK_RIGHT -> playerDirectionX = 1;
-            case KeyEvent.VK_DOWN -> playerDirectionY = 1;
-            case KeyEvent.VK_LEFT -> playerDirectionX = -1;
-            case KeyEvent.VK_ENTER -> {
-                if(starter) start();
-            }
-            case KeyEvent.VK_SPACE -> shot = true;
-        }
-    }
-
-    public void keyReleased(KeyEvent e) {
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_UP, KeyEvent.VK_DOWN -> playerDirectionY = 0;
-            case KeyEvent.VK_RIGHT, KeyEvent.VK_LEFT -> playerDirectionX = 0;
-        }
-    }
-
-    public void keyTyped(KeyEvent e) {
     }
 
     public void playerMovement() {
@@ -223,5 +199,25 @@ public class Game extends JPanel implements KeyListener {
         beamPos.setLocation(playerPos.x + PLAYER_SIZE / 2 - 2, playerPos.y + PLAYER_SIZE);
         score += 10;
         System.out.println(score);
+    }
+
+    public void handleKeyPressed(KeyEvent e) {
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_UP -> playerDirectionY = -1;
+            case KeyEvent.VK_RIGHT -> playerDirectionX = 1;
+            case KeyEvent.VK_DOWN -> playerDirectionY = 1;
+            case KeyEvent.VK_LEFT -> playerDirectionX = -1;
+            case KeyEvent.VK_ENTER -> {
+                if(starter) start();
+            }
+            case KeyEvent.VK_SPACE -> shot = true;
+        }
+    }
+
+    public void handleKeyReleased(KeyEvent e) {
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_UP, KeyEvent.VK_DOWN -> playerDirectionY = 0;
+            case KeyEvent.VK_RIGHT, KeyEvent.VK_LEFT -> playerDirectionX = 0;
+        }
     }
 }
