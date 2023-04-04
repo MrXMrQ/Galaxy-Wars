@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
 import javax.swing.*;
 
 public class Game extends JPanel implements KeyListener {
@@ -29,6 +30,7 @@ public class Game extends JPanel implements KeyListener {
     private final Point[] pixel;
 
     public Game() {
+        setBounds(0, 0, 500, 500);
         addKeyListener(this);
         setFocusable(true);
 
@@ -88,13 +90,14 @@ public class Game extends JPanel implements KeyListener {
     }
 
     public void keyPressed(KeyEvent e) {
+        System.out.println("CHECK");
         switch (e.getKeyCode()) {
             case KeyEvent.VK_UP -> playerDirectionY = -1;
             case KeyEvent.VK_RIGHT -> playerDirectionX = 1;
             case KeyEvent.VK_DOWN -> playerDirectionY = 1;
             case KeyEvent.VK_LEFT -> playerDirectionX = -1;
             case KeyEvent.VK_ENTER -> {
-                if (starter) start();
+                if(starter) start();
             }
             case KeyEvent.VK_SPACE -> shot = true;
         }

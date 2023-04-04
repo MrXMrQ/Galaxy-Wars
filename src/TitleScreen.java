@@ -1,17 +1,17 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Objects;
 
-public class TitleScreen extends JFrame {
-    public TitleScreen() {
-        setVisible(true);
-        setSize(new Dimension(500, 500));
-        setResizable(false);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+public class TitleScreen {
+    public static MyScreen myScreen;
 
-        JLayeredPane layeredPane = getLayeredPane();
+    public TitleScreen() {
+        myScreen = new MyScreen();
+
+        JLayeredPane layeredPane = myScreen.getLayeredPane();
 
         RectanglePanel rectanglePanel = new RectanglePanel();
         rectanglePanel.setBounds(0, 0, 500, 500);
@@ -40,27 +40,16 @@ public class TitleScreen extends JFrame {
         layeredPane.add(labelButton_1, Integer.valueOf(1));
         layeredPane.add(labelButton_2, Integer.valueOf(1));
 
-
         labelButton_0.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                System.out.println("Starting game...");
-                new MyFrame();
-                dispose();
+                System.out.println("Staring game...");
+                layeredPane.removeAll();
+                Game game = new Game();
+                layeredPane.add(game, Integer.valueOf(1));
+                layeredPane.repaint();
             }
         });
-
-        labelButton_1.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                System.out.println("Saving...");
-            }
-        });
-
-
-
-
-
     }
 
     private class RectanglePanel extends JPanel {
