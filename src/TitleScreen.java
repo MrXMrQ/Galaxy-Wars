@@ -16,7 +16,7 @@ public class TitleScreen {
 
     public TitleScreen() {
         myScreen = new MyScreen();
-
+        myScreen.setTitle("Menu");
 
         JLayeredPane layeredPane = myScreen.getLayeredPane();
 
@@ -55,6 +55,7 @@ public class TitleScreen {
             @Override
             public void mouseClicked(MouseEvent e) {
                 layeredPane.removeAll();
+                myScreen.setTitle("Galaxy wars - game");
                 game = new Game();
                 layeredPane.add(game, Integer.valueOf(1));
                 layeredPane.add(labelReady, Integer.valueOf(2));
