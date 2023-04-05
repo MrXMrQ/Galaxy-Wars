@@ -24,8 +24,7 @@ public class Game extends JPanel {
 
     private int score = 0;
     public boolean starter = true;
-    private boolean shot = false;
-    private boolean gameOver = false;
+    private boolean shot, gameOver = false;
 
     private final Point[] pixel;
 
@@ -208,9 +207,9 @@ public class Game extends JPanel {
             }
 
             if (panelPlayer.bounds().intersects(panelEnemy_0.getBounds()) || panelPlayer.bounds().intersects(panelEnemy_1.getBounds()) || panelPlayer.bounds().intersects(panelEnemy_2.getBounds()) || panelPlayer.bounds().intersects(panelEnemy_3.getBounds()) || panelPlayer.bounds().intersects(panelEnemy_4.getBounds()) || panelPlayer.bounds().intersects(panelEnemy_5.getBounds())) {
+                gameOver = true;
                 playerThread.stop();
                 enemyThread.stop();
-                gameOver = true;
                 collisonThread.stop();
             }
 
@@ -251,5 +250,25 @@ public class Game extends JPanel {
 
     public boolean isGameOver() {
         return gameOver;
+    }
+
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
+    }
+
+    public boolean isStarter() {
+        return starter;
+    }
+
+    public void setStarter(boolean starter) {
+        this.starter = starter;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 }
