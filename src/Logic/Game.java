@@ -1,8 +1,7 @@
+package Logic;
+
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseAdapter;
-import java.security.Key;
 import javax.swing.*;
 
 public class Game extends JPanel {
@@ -15,10 +14,10 @@ public class Game extends JPanel {
 
     //ENEMY
     private static final int ENEMY_SIZE = 30;
-    private static final int ENEMY_SPEED = 1;
+    private static final int ENEMY_SPEED = 3;
 
     //Point
-    private final Point enemyPos_0, enemyPos_1, enemyPos_2, enemyPos_3, beamPos, playerPos;
+    private final Point enemyPos_0, enemyPos_1, enemyPos_2, enemyPos_3, enemyPos_4, enemyPos_5, beamPos, playerPos;
 
     //THREADS
     Thread playerThread, enemyThread, collisonThread;
@@ -26,7 +25,6 @@ public class Game extends JPanel {
     private int score = 0;
     private boolean starter = true;
     private boolean shot = false;
-    private final boolean pause = false;
 
     private final Point[] pixel;
 
@@ -35,7 +33,7 @@ public class Game extends JPanel {
         setFocusable(true);
 
 
-        playerPos = new Point(200, 200);
+        playerPos = new Point(230, 400);
         playerDirectionX = 0;
         playerDirectionY = 0;
 
@@ -43,6 +41,8 @@ public class Game extends JPanel {
         enemyPos_1 = new Point((int) (Math.random() * 470), 0);
         enemyPos_2 = new Point((int) (Math.random() * 470), 0);
         enemyPos_3 = new Point((int) (Math.random() * 470), 0);
+        enemyPos_4 = new Point((int) (Math.random() * 470), 0);
+        enemyPos_5 = new Point((int) (Math.random() * 470), 0);
 
         beamPos = new Point(playerPos.x + PLAYER_SIZE / 2 - 2, playerPos.y + PLAYER_SIZE);
 
@@ -64,8 +64,8 @@ public class Game extends JPanel {
         g.fillRect(0, 0, 500, 500);
 
         g.setColor(Color.WHITE);
-        for (int i = 0; i < pixel.length; i++) {
-            g.fillRect(pixel[i].x, pixel[i].y, 1, 1);
+        for (Point point : pixel) {
+            g.fillRect(point.x, point.y, 1, 1);
         }
 
         g.setColor(Color.YELLOW);
@@ -79,6 +79,8 @@ public class Game extends JPanel {
         g.fillRect(enemyPos_1.x, enemyPos_1.y, ENEMY_SIZE, ENEMY_SIZE);
         g.fillRect(enemyPos_2.x, enemyPos_2.y, ENEMY_SIZE, ENEMY_SIZE);
         g.fillRect(enemyPos_3.x, enemyPos_3.y, ENEMY_SIZE, ENEMY_SIZE);
+        g.fillRect(enemyPos_4.x, enemyPos_4.y, ENEMY_SIZE, ENEMY_SIZE);
+        g.fillRect(enemyPos_5.x, enemyPos_5.y, ENEMY_SIZE, ENEMY_SIZE);
 
     }
 
@@ -119,6 +121,8 @@ public class Game extends JPanel {
             enemyPos_1.y += ENEMY_SPEED + 2;
             enemyPos_2.y += ENEMY_SPEED + 3;
             enemyPos_3.y += ENEMY_SPEED + 1;
+            enemyPos_4.y += ENEMY_SPEED + 0.5;
+            enemyPos_5.y += ENEMY_SPEED + 1.5;
 
             if (enemyPos_0.y > 440) {
                 enemyPos_0.setLocation((int) (Math.random() * 470), 0);
@@ -134,6 +138,14 @@ public class Game extends JPanel {
             }
             if (enemyPos_3.y > 440) {
                 enemyPos_3.setLocation((int) (Math.random() * 470), 0);
+                score++;
+            }
+            if (enemyPos_4.y > 440) {
+                enemyPos_4.setLocation((int) (Math.random() * 470), 0);
+                score++;
+            }
+            if (enemyPos_5.y > 440) {
+                enemyPos_5.setLocation((int) (Math.random() * 470), 0);
                 score++;
             }
             repaint();
@@ -152,6 +164,8 @@ public class Game extends JPanel {
         JPanel panelEnemy_1 = new JPanel();
         JPanel panelEnemy_2 = new JPanel();
         JPanel panelEnemy_3 = new JPanel();
+        JPanel panelEnemy_4 = new JPanel();
+        JPanel panelEnemy_5 = new JPanel();
 
         JPanel panelBeam = new JPanel();
 
@@ -162,8 +176,11 @@ public class Game extends JPanel {
             panelEnemy_1.setBounds(enemyPos_1.x, enemyPos_1.y, ENEMY_SIZE, ENEMY_SIZE);
             panelEnemy_2.setBounds(enemyPos_2.x, enemyPos_2.y, ENEMY_SIZE, ENEMY_SIZE);
             panelEnemy_3.setBounds(enemyPos_3.x, enemyPos_3.y, ENEMY_SIZE, ENEMY_SIZE);
+            panelEnemy_4.setBounds(enemyPos_4.x, enemyPos_4.y, ENEMY_SIZE, ENEMY_SIZE);
+            panelEnemy_5.setBounds(enemyPos_5.x, enemyPos_5.y, ENEMY_SIZE, ENEMY_SIZE);
 
-            panelBeam.setBounds(beamPos.x, beamPos.y, 5, 5);
+            panelBeam.setBounds(beamPos.x, beamPos.y, 5, 1);
+            panelBeam.setBackground(Color.BLUE);
 
             if (panelBeam.bounds().intersects(panelEnemy_0.getBounds())) {
                 enemyPos_0.setLocation((int) (Math.random() * 470), 0);
@@ -181,8 +198,16 @@ public class Game extends JPanel {
                 enemyPos_3.setLocation((int) (Math.random() * 470), 0);
                 asteroidHitAction();
             }
+            if (panelBeam.bounds().intersects(panelEnemy_4.getBounds())) {
+                enemyPos_4.setLocation((int) (Math.random() * 470), 0);
+                asteroidHitAction();
+            }
+            if (panelBeam.bounds().intersects(panelEnemy_5.getBounds())) {
+                enemyPos_5.setLocation((int) (Math.random() * 470), 0);
+                asteroidHitAction();
+            }
 
-            if (panelPlayer.bounds().intersects(panelEnemy_0.getBounds()) || panelPlayer.bounds().intersects(panelEnemy_1.getBounds()) || panelPlayer.bounds().intersects(panelEnemy_2.getBounds()) || panelPlayer.bounds().intersects(panelEnemy_3.getBounds())) {
+            if (panelPlayer.bounds().intersects(panelEnemy_0.getBounds()) || panelPlayer.bounds().intersects(panelEnemy_1.getBounds()) || panelPlayer.bounds().intersects(panelEnemy_2.getBounds()) || panelPlayer.bounds().intersects(panelEnemy_3.getBounds()) || panelPlayer.bounds().intersects(panelEnemy_4.getBounds()) || panelPlayer.bounds().intersects(panelEnemy_5.getBounds())) {
                 System.exit(1);
             }
 
@@ -208,7 +233,7 @@ public class Game extends JPanel {
             case KeyEvent.VK_DOWN -> playerDirectionY = 1;
             case KeyEvent.VK_LEFT -> playerDirectionX = -1;
             case KeyEvent.VK_ENTER -> {
-                if(starter) start();
+                if (starter) start();
             }
             case KeyEvent.VK_SPACE -> shot = true;
         }

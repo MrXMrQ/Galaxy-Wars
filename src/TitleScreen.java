@@ -1,29 +1,22 @@
+import Logic.Game;
+import Screens.MyScreen;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-import java.util.Objects ;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.Objects;
 
 public class TitleScreen {
     public static MyScreen myScreen;
     public Game game;
+    public boolean remove = true;
 
     public TitleScreen() {
         myScreen = new MyScreen();
-        myScreen.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyReleased(KeyEvent e) {
-                if(game != null) {
-                    game.handleKeyReleased(e);
-                }
-            }
 
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if(game != null) {
-                    game.handleKeyPressed(e);
-                }
-            }
-        });
 
         JLayeredPane layeredPane = myScreen.getLayeredPane();
 
@@ -35,19 +28,23 @@ public class TitleScreen {
         JLabel labelButton_0 = new JLabel();
         JLabel labelButton_1 = new JLabel();
         JLabel labelButton_2 = new JLabel();
+        JLabel labelReady = new JLabel();
 
-        ImageIcon imageIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("GalaxyWars.png")));
-        ImageIcon imageIcon_0 = new ImageIcon(Objects.requireNonNull(getClass().getResource("Start.png")));
-        ImageIcon imageIcon_1 = new ImageIcon(Objects.requireNonNull(getClass().getResource("Save.png")));
+        ImageIcon imageHeadline = new ImageIcon(Objects.requireNonNull(getClass().getResource("GalaxyWars.png")));
+        ImageIcon imageButton_0 = new ImageIcon(Objects.requireNonNull(getClass().getResource("Start.png")));
+        ImageIcon imageButton_1 = new ImageIcon(Objects.requireNonNull(getClass().getResource("Save.png")));
+        ImageIcon imageReady = new ImageIcon(Objects.requireNonNull(getClass().getResource("Ready.png")));
 
-        labelHeadline.setIcon(imageIcon);
-        labelButton_0.setIcon(imageIcon_0);
-        labelButton_1.setIcon(imageIcon_1);
+        labelHeadline.setIcon(imageHeadline);
+        labelButton_0.setIcon(imageButton_0);
+        labelButton_1.setIcon(imageButton_1);
+        labelReady.setIcon(imageReady);
 
         labelHeadline.setBounds(0, 0, 500, 100);
         labelButton_0.setBounds(50, 230, 100, 50);
         labelButton_1.setBounds(200, 230, 100, 50);
         labelButton_2.setBounds(350, 230, 100, 50);
+        labelReady.setBounds(0, 0, 500, 500);
 
         layeredPane.add(labelHeadline, Integer.valueOf(1));
         layeredPane.add(labelButton_0, Integer.valueOf(1));
@@ -60,12 +57,33 @@ public class TitleScreen {
                 layeredPane.removeAll();
                 game = new Game();
                 layeredPane.add(game, Integer.valueOf(1));
+                layeredPane.add(labelReady, Integer.valueOf(2));
                 layeredPane.repaint();
+            }
+        });
+
+        myScreen.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if(game != null) {
+                    game.handleKeyReleased(e);
+                }
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(game != null) {
+                    game.handleKeyPressed(e);
+                    if(e.getKeyCode() == KeyEvent.VK_ENTER && remove) {
+                        layeredPane.remove(labelReady);
+                        remove = false;
+                    }
+                }
             }
         });
     }
 
-    private class RectanglePanel extends JPanel {
+    private static class RectanglePanel extends JPanel {
         @Override
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
