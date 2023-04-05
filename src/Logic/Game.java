@@ -20,18 +20,18 @@ public class Game extends JPanel {
     private final Point enemyPos_0, enemyPos_1, enemyPos_2, enemyPos_3, enemyPos_4, enemyPos_5, beamPos, playerPos;
 
     //THREADS
-    Thread playerThread, enemyThread, collisonThread;
+    public Thread playerThread, enemyThread, collisonThread;
 
     private int score = 0;
-    private boolean starter = true;
+    public boolean starter = true;
     private boolean shot = false;
+    private boolean gameOver = false;
 
     private final Point[] pixel;
 
     public Game() {
         setBounds(0, 0, 500, 500);
         setFocusable(true);
-
 
         playerPos = new Point(230, 400);
         playerDirectionX = 0;
@@ -208,7 +208,10 @@ public class Game extends JPanel {
             }
 
             if (panelPlayer.bounds().intersects(panelEnemy_0.getBounds()) || panelPlayer.bounds().intersects(panelEnemy_1.getBounds()) || panelPlayer.bounds().intersects(panelEnemy_2.getBounds()) || panelPlayer.bounds().intersects(panelEnemy_3.getBounds()) || panelPlayer.bounds().intersects(panelEnemy_4.getBounds()) || panelPlayer.bounds().intersects(panelEnemy_5.getBounds())) {
-                System.exit(1);
+                playerThread.stop();
+                enemyThread.stop();
+                gameOver = true;
+                collisonThread.stop();
             }
 
             try {
@@ -244,5 +247,9 @@ public class Game extends JPanel {
             case KeyEvent.VK_UP, KeyEvent.VK_DOWN -> playerDirectionY = 0;
             case KeyEvent.VK_RIGHT, KeyEvent.VK_LEFT -> playerDirectionX = 0;
         }
+    }
+
+    public boolean isGameOver() {
+        return gameOver;
     }
 }
