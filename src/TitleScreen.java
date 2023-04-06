@@ -16,7 +16,7 @@ public class TitleScreen {
     JLayeredPane layeredPane;
     Thread gameOverThread, thread, scoreThread;
     JLabel labelReady, labelPause;
-    private  boolean inMenu = true;
+    private boolean inMenu = true;
 
     public TitleScreen() {
         myScreen = new MyScreen();
@@ -49,7 +49,7 @@ public class TitleScreen {
                         labelPause.setBounds(0, 0, 500, 500);
                         layeredPane.add(labelPause, Integer.valueOf(1));
 
-                    } else if(e.getKeyCode() == KeyEvent.VK_ESCAPE && labelPause != null) {
+                    } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE && labelPause != null) {
                         layeredPane.remove(labelPause);
                     }
                 }
@@ -115,34 +115,32 @@ public class TitleScreen {
         layeredPane.add(rectanglePanel, Integer.valueOf(0));
 
         JLabel labelHeadline = new JLabel();
-        JLabel labelStartButton = new JLabel();
-        JLabel labelButton_1 = new JLabel();
-        JLabel labelButton_2 = new JLabel();
-        labelReady = new JLabel();
+        JLabel labelStartButton = new JLabel("start", SwingConstants.CENTER);
+        JLabel labelOptionsButton = new JLabel("options", SwingConstants.CENTER);
+        JLabel labelStoreButton = new JLabel("store", SwingConstants.CENTER);
 
         ImageIcon imageHeadline = new ImageIcon(Objects.requireNonNull(getClass().getResource("GalaxyWars.png")));
-        ImageIcon imageStarButton = new ImageIcon(Objects.requireNonNull(getClass().getResource("Start.png")));
-        ImageIcon imageReady = new ImageIcon(Objects.requireNonNull(getClass().getResource("Ready.png")));
 
         labelHeadline.setIcon(imageHeadline);
-        labelStartButton.setIcon(imageStarButton);
-        labelReady.setIcon(imageReady);
+
+        labelStartButton.setFont(new Font("Retro Computer", Font.BOLD, 20));
+        labelStoreButton.setFont(new Font("Retro Computer", Font.BOLD, 20));
+        labelOptionsButton.setFont(new Font("Retro Computer", Font.BOLD, 20));
+
+        labelStartButton.setForeground(Color.WHITE);
+        labelStoreButton.setForeground(Color.WHITE);
+        labelOptionsButton.setForeground(Color.WHITE);
 
         labelHeadline.setBounds(0, 0, 500, 100);
         labelStartButton.setBounds(50, 230, 100, 50);
-        labelButton_1.setBounds(200, 230, 100, 50);
-        labelButton_2.setBounds(350, 230, 100, 50);
-        labelReady.setBounds(0, 0, 500, 500);
+        labelOptionsButton.setBounds(150, 230, 200, 50);
+        labelStoreButton.setBounds(350, 230, 100, 50);
 
-        labelButton_1.setBackground(Color.YELLOW);
-        labelButton_2.setBackground(Color.YELLOW);
-        labelButton_1.setOpaque(true);
-        labelButton_2.setOpaque(true);
 
         layeredPane.add(labelHeadline, Integer.valueOf(1));
         layeredPane.add(labelStartButton, Integer.valueOf(1));
-        layeredPane.add(labelButton_1, Integer.valueOf(1));
-        layeredPane.add(labelButton_2, Integer.valueOf(1));
+        layeredPane.add(labelOptionsButton, Integer.valueOf(1));
+        layeredPane.add(labelStoreButton, Integer.valueOf(1));
 
         labelStartButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -151,7 +149,8 @@ public class TitleScreen {
                 myScreen.setTitle("Galaxy wars - game");
                 game = new Game();
                 layeredPane.add(game, Integer.valueOf(0));
-                layeredPane.add(labelReady, Integer.valueOf(1));
+
+                addReady();
                 inMenu = false;
 
                 JLabel labelScore = new JLabel("Score: " + game.getScore());
@@ -161,6 +160,50 @@ public class TitleScreen {
 
                 layeredPane.repaint();
                 remove = true;
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                labelStartButton.setForeground(Color.YELLOW);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                labelStartButton.setForeground(Color.WHITE);
+            }
+        });
+
+        labelOptionsButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                labelOptionsButton.setForeground(Color.YELLOW);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                labelOptionsButton.setForeground(Color.WHITE);
+            }
+        });
+
+        labelStoreButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                labelStoreButton.setForeground(Color.YELLOW);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                labelStoreButton.setForeground(Color.WHITE);
             }
         });
 
@@ -179,19 +222,20 @@ public class TitleScreen {
         layeredPane.add(rectanglePanel, Integer.valueOf(0));
 
         JLabel labelGameOverHeadline = new JLabel();
-        JLabel labelMenuButton = new JLabel();
-        JLabel labelTryAgainButton = new JLabel();
-        JLabel labelQuitButton = new JLabel();
+        JLabel labelMenuButton = new JLabel("menu", SwingUtilities.CENTER);
+        JLabel labelTryAgainButton = new JLabel("Try again", SwingUtilities.CENTER);
+        JLabel labelQuitButton = new JLabel("Quit", SwingUtilities.CENTER);
 
         ImageIcon imageGameOverHeadline = new ImageIcon(Objects.requireNonNull(getClass().getResource("GameOverHeadline.png")));
-        ImageIcon imageBackButton = new ImageIcon(Objects.requireNonNull(getClass().getResource("Menu.png")));
-        ImageIcon imageTryAgainButton = new ImageIcon(Objects.requireNonNull(getClass().getResource("TryAgain.png")));
-        ImageIcon imageQuitButton = new ImageIcon(Objects.requireNonNull(getClass().getResource("Quit.png")));
-
         labelGameOverHeadline.setIcon(imageGameOverHeadline);
-        labelMenuButton.setIcon(imageBackButton);
-        labelTryAgainButton.setIcon(imageTryAgainButton);
-        labelQuitButton.setIcon(imageQuitButton);
+
+        labelMenuButton.setFont(new Font("Retro Computer", Font.BOLD, 20));
+        labelTryAgainButton.setFont(new Font("Retro Computer", Font.BOLD, 20));
+        labelQuitButton.setFont(new Font("Retro Computer", Font.BOLD, 20));
+
+        labelMenuButton.setForeground(Color.WHITE);
+        labelTryAgainButton.setForeground(Color.WHITE);
+        labelQuitButton.setForeground(Color.WHITE);
 
         labelGameOverHeadline.setBounds(10, 0, 500, 100);
         labelMenuButton.setBounds(185, 150, 100, 50);
@@ -210,6 +254,16 @@ public class TitleScreen {
                 layeredPane.repaint();
                 addMenu();
             }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                labelMenuButton.setForeground(Color.YELLOW);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                labelMenuButton.setForeground(Color.WHITE);
+            }
         });
 
         labelTryAgainButton.addMouseListener(new MouseAdapter() {
@@ -220,8 +274,18 @@ public class TitleScreen {
                 layeredPane.removeAll();
                 game = new Game();
                 layeredPane.add(game, Integer.valueOf(0));
-                layeredPane.add(labelReady, Integer.valueOf(1));
+                addReady();
                 layeredPane.repaint();
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                labelTryAgainButton.setForeground(Color.YELLOW);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                labelTryAgainButton.setForeground(Color.WHITE);
             }
         });
 
@@ -230,6 +294,24 @@ public class TitleScreen {
             public void mouseClicked(MouseEvent e) {
                 System.exit(1);
             }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                labelQuitButton.setForeground(Color.YELLOW);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                labelQuitButton.setForeground(Color.WHITE);
+            }
         });
+    }
+
+    public void addReady() {
+        labelReady = new JLabel();
+        ImageIcon imageReady = new ImageIcon(Objects.requireNonNull(getClass().getResource("Ready.png")));
+        labelReady.setIcon(imageReady);
+        labelReady.setBounds(0, 0, 500, 500);
+        layeredPane.add(labelReady, Integer.valueOf(1));
     }
 }
