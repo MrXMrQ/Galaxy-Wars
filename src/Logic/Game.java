@@ -12,12 +12,13 @@ public class Game extends JPanel {
     private int playerDirectionX;
     private int playerDirectionY;
 
+    private int life;
     //ENEMY
     private static final int ENEMY_SIZE = 30;
     private static final int ENEMY_SPEED = 3;
 
     //Point
-    private final Point enemyPos_0, enemyPos_1, enemyPos_2, enemyPos_3, enemyPos_4, enemyPos_5, beamPos, playerPos;
+    private final Point enemyPos_0, enemyPos_1, enemyPos_2, enemyPos_3, enemyPos_4, enemyPos_5, beamPos, playerPos, lifePos;
 
     //THREADS
     public Thread playerThread, enemyThread, collisonThread;
@@ -34,8 +35,12 @@ public class Game extends JPanel {
         setFocusable(true);
 
         playerPos = new Point(230, 400);
+
         playerDirectionX = 0;
         playerDirectionY = 0;
+
+        life = 3;
+        lifePos = new Point(370, 10);
 
         enemyPos_0 = new Point((int) (Math.random() * 470), 0);
         enemyPos_1 = new Point((int) (Math.random() * 470), 0);
@@ -82,6 +87,20 @@ public class Game extends JPanel {
         g.fillRect(enemyPos_4.x, enemyPos_4.y, ENEMY_SIZE, ENEMY_SIZE);
         g.fillRect(enemyPos_5.x, enemyPos_5.y, ENEMY_SIZE, ENEMY_SIZE);
 
+        g.setColor(Color.BLUE);
+        if (life == 3) {
+            g.fillRect(lifePos.x, lifePos.y, ENEMY_SIZE, ENEMY_SIZE);
+            g.fillRect(lifePos.x + 40, lifePos.y, ENEMY_SIZE, ENEMY_SIZE);
+            g.fillRect(lifePos.x + 80, lifePos.y, ENEMY_SIZE, ENEMY_SIZE);
+
+        } else if (life == 2) {
+            g.fillRect(lifePos.x + 40, lifePos.y, ENEMY_SIZE, ENEMY_SIZE);
+            g.fillRect(lifePos.x + 80, lifePos.y, ENEMY_SIZE, ENEMY_SIZE);
+
+        } else if (life == 1) {
+            g.fillRect(lifePos.x + 80, lifePos.y, ENEMY_SIZE, ENEMY_SIZE);
+
+        }
     }
 
     public void start() {
@@ -212,16 +231,18 @@ public class Game extends JPanel {
             }
 
             if (panelPlayer.bounds().intersects(panelEnemy_0.getBounds()) || panelPlayer.bounds().intersects(panelEnemy_1.getBounds()) || panelPlayer.bounds().intersects(panelEnemy_2.getBounds()) || panelPlayer.bounds().intersects(panelEnemy_3.getBounds()) || panelPlayer.bounds().intersects(panelEnemy_4.getBounds()) || panelPlayer.bounds().intersects(panelEnemy_5.getBounds())) {
-                gameOver = true;
-                playerThread.stop();
-                enemyThread.stop();
-                collisonThread.stop();
-            }
-
-            try {
-                Thread.sleep(5);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                life--;
+                if (life == 0) {
+                    gameOver = true;
+                    playerThread.stop();
+                    enemyThread.stop();
+                    collisonThread.stop();
+                }
+                try {
+                    Thread.sleep(300);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }
@@ -230,7 +251,6 @@ public class Game extends JPanel {
         shot = false;
         beamPos.setLocation(playerPos.x + PLAYER_SIZE / 2 - 2, playerPos.y + PLAYER_SIZE);
         score += 10;
-        System.out.println(score);
     }
 
     public void handleKeyPressed(KeyEvent e) {
