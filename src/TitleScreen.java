@@ -15,7 +15,8 @@ public class TitleScreen {
     public boolean remove = true;
     JLayeredPane layeredPane;
     Thread gameOverThread, thread, scoreThread;
-    JLabel labelReady, labelScore;
+    JLabel labelReady, labelPause;
+    private  boolean inMenu = true;
 
     public TitleScreen() {
         myScreen = new MyScreen();
@@ -40,6 +41,16 @@ public class TitleScreen {
                     if (e.getKeyCode() == KeyEvent.VK_ENTER && remove) {
                         remove = false;
                         layeredPane.remove(labelReady);
+                    }
+                    if (e.getKeyCode() == KeyEvent.VK_ESCAPE && game.isPause() && !inMenu) {
+                        labelPause = new JLabel();
+                        ImageIcon imagePause = new ImageIcon(Objects.requireNonNull(getClass().getResource("Pause.png")));
+                        labelPause.setIcon(imagePause);
+                        labelPause.setBounds(0, 0, 500, 500);
+                        layeredPane.add(labelPause, Integer.valueOf(1));
+
+                    } else if(e.getKeyCode() == KeyEvent.VK_ESCAPE && labelPause != null) {
+                        layeredPane.remove(labelPause);
                     }
                 }
             }
@@ -97,6 +108,8 @@ public class TitleScreen {
     }
 
     public void addMenu() {
+        inMenu = true;
+
         RectanglePanel rectanglePanel = new RectanglePanel();
         rectanglePanel.setBounds(0, 0, 500, 500);
         layeredPane.add(rectanglePanel, Integer.valueOf(0));
@@ -139,6 +152,7 @@ public class TitleScreen {
                 game = new Game();
                 layeredPane.add(game, Integer.valueOf(0));
                 layeredPane.add(labelReady, Integer.valueOf(1));
+                inMenu = false;
 
                 JLabel labelScore = new JLabel("Score: " + game.getScore());
                 labelScore.setFont(new Font("Retro Computer", Font.BOLD, 12));
@@ -158,6 +172,8 @@ public class TitleScreen {
     }
 
     public void addGameOver() {
+        inMenu = true;
+
         RectanglePanel rectanglePanel = new RectanglePanel();
         rectanglePanel.setBounds(0, 0, 500, 500);
         layeredPane.add(rectanglePanel, Integer.valueOf(0));
@@ -200,6 +216,7 @@ public class TitleScreen {
             @Override
             public void mouseClicked(MouseEvent e) {
                 remove = true;
+                inMenu = false;
                 layeredPane.removeAll();
                 game = new Game();
                 layeredPane.add(game, Integer.valueOf(0));

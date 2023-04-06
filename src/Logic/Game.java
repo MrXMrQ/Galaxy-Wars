@@ -25,6 +25,7 @@ public class Game extends JPanel {
     private int score = 0;
     public boolean starter = true;
     private boolean shot, gameOver = false;
+    private boolean pause = false;
 
     private final Point[] pixel;
 
@@ -91,67 +92,71 @@ public class Game extends JPanel {
     }
 
     public void playerMovement() {
-        while (playerThread.isAlive()) {
-            playerPos.x += playerDirectionX * PLAYER_SPEED;
-            playerPos.y += playerDirectionY * PLAYER_SPEED;
+        while (true) {
+            if (playerThread.isAlive() && !pause) {
+                playerPos.x += playerDirectionX * PLAYER_SPEED;
+                playerPos.y += playerDirectionY * PLAYER_SPEED;
 
-            if (playerPos.x < 0) playerPos.x = 465;
-            if (playerPos.y < 0) playerPos.y = 0;
-            if (playerPos.x > 465) playerPos.x = 0;
-            if (playerPos.y > 440) playerPos.y = 440;
+                if (playerPos.x < 0) playerPos.x = 465;
+                if (playerPos.y < 0) playerPos.y = 0;
+                if (playerPos.x > 465) playerPos.x = 0;
+                if (playerPos.y > 440) playerPos.y = 440;
 
-            if (!shot) beamPos.setLocation(playerPos.x + PLAYER_SIZE / 2 - 2, playerPos.y + PLAYER_SIZE);
-            else {
-                beamPos.y -= 10;
-                if (beamPos.y < 0) shot = false;
-            }
-            repaint();
-            try {
-                Thread.sleep(16);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                if (!shot) beamPos.setLocation(playerPos.x + PLAYER_SIZE / 2 - 2, playerPos.y + PLAYER_SIZE);
+                else {
+                    beamPos.y -= 10;
+                    if (beamPos.y < 0) shot = false;
+                }
+                repaint();
+                try {
+                    Thread.sleep(16);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
 
     public void enemyMovement() {
-        while (enemyThread.isAlive()) {
-            enemyPos_0.y += ENEMY_SPEED;
-            enemyPos_1.y += ENEMY_SPEED + 2;
-            enemyPos_2.y += ENEMY_SPEED + 3;
-            enemyPos_3.y += ENEMY_SPEED + 1;
-            enemyPos_4.y += ENEMY_SPEED + 0.5;
-            enemyPos_5.y += ENEMY_SPEED + 1.5;
+        while (true) {
+            if (enemyThread.isAlive() && !pause) {
+                enemyPos_0.y += ENEMY_SPEED;
+                enemyPos_1.y += ENEMY_SPEED + 2;
+                enemyPos_2.y += ENEMY_SPEED + 3;
+                enemyPos_3.y += ENEMY_SPEED + 1;
+                enemyPos_4.y += ENEMY_SPEED + 0.5;
+                enemyPos_5.y += ENEMY_SPEED + 1.5;
 
-            if (enemyPos_0.y > 440) {
-                enemyPos_0.setLocation((int) (Math.random() * 470), 0);
-                score++;
-            }
-            if (enemyPos_1.y > 440) {
-                enemyPos_1.setLocation((int) (Math.random() * 470), 0);
-                score++;
-            }
-            if (enemyPos_2.y > 440) {
-                enemyPos_2.setLocation((int) (Math.random() * 470), 0);
-                score++;
-            }
-            if (enemyPos_3.y > 440) {
-                enemyPos_3.setLocation((int) (Math.random() * 470), 0);
-                score++;
-            }
-            if (enemyPos_4.y > 440) {
-                enemyPos_4.setLocation((int) (Math.random() * 470), 0);
-                score++;
-            }
-            if (enemyPos_5.y > 440) {
-                enemyPos_5.setLocation((int) (Math.random() * 470), 0);
-                score++;
-            }
-            repaint();
-            try {
-                Thread.sleep(16);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                if (enemyPos_0.y > 440) {
+                    enemyPos_0.setLocation((int) (Math.random() * 470), 0);
+                    score++;
+                }
+                if (enemyPos_1.y > 440) {
+                    enemyPos_1.setLocation((int) (Math.random() * 470), 0);
+                    score++;
+                }
+                if (enemyPos_2.y > 440) {
+                    enemyPos_2.setLocation((int) (Math.random() * 470), 0);
+                    score++;
+                }
+                if (enemyPos_3.y > 440) {
+                    enemyPos_3.setLocation((int) (Math.random() * 470), 0);
+                    score++;
+                }
+                if (enemyPos_4.y > 440) {
+                    enemyPos_4.setLocation((int) (Math.random() * 470), 0);
+                    score++;
+                }
+                if (enemyPos_5.y > 440) {
+                    enemyPos_5.setLocation((int) (Math.random() * 470), 0);
+                    score++;
+                }
+                repaint();
+                try {
+                    Thread.sleep(16);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -237,6 +242,13 @@ public class Game extends JPanel {
             case KeyEvent.VK_ENTER -> {
                 if (starter) start();
             }
+            case KeyEvent.VK_ESCAPE -> {
+                if (!pause && !starter) {
+                    pause = true;
+                } else if (pause) {
+                    pause = false;
+                }
+            }
             case KeyEvent.VK_SPACE -> shot = true;
         }
     }
@@ -270,5 +282,13 @@ public class Game extends JPanel {
 
     public void setScore(int score) {
         this.score = score;
+    }
+
+    public boolean isPause() {
+        return pause;
+    }
+
+    public void setPause(boolean pause) {
+        this.pause = pause;
     }
 }
