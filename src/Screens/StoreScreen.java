@@ -17,6 +17,8 @@ import java.util.Properties;
 public class StoreScreen {
     Properties properties = PropertySaver.loadProperties();
     private boolean clickedStarWarsBundle, clickedSpaceShuttleBundle, clickedOrganicBundle = false;
+    private final LineBorder lineBorderRED = new LineBorder(Color.RED, 4);
+    private final LineBorder lineBorderWHITE = new LineBorder(Color.WHITE, 4);
 
     public JLayeredPane addStore(JLayeredPane layeredPane) {
         JLabel labelStoreHeadline = new JLabel();
@@ -69,7 +71,7 @@ public class StoreScreen {
             @Override
             public void mouseClicked(MouseEvent e) {
                 playButtonSelectSound();
-                labelSkinBundle_StarWars.setBorder(new LineBorder(Color.RED));
+                labelSkinBundle_StarWars.setBorder(lineBorderRED);
                 labelSkinBundle_SpaceShuttle.setBorder(null);
                 labelSkinBundle_Organic.setBorder(null);
                 clickedStarWarsBundle = true;
@@ -81,7 +83,7 @@ public class StoreScreen {
             public void mouseEntered(MouseEvent e) {
                 if(!clickedStarWarsBundle) {
                     playButtonHoverSound();
-                    labelSkinBundle_StarWars.setBorder(new LineBorder(Color.WHITE));
+                    labelSkinBundle_StarWars.setBorder(lineBorderWHITE);
                 }
             }
 
@@ -98,7 +100,7 @@ public class StoreScreen {
             public void mouseClicked(MouseEvent e) {
                 playButtonSelectSound();
                 labelSkinBundle_StarWars.setBorder(null);
-                labelSkinBundle_SpaceShuttle.setBorder(new LineBorder(Color.RED));
+                labelSkinBundle_SpaceShuttle.setBorder(lineBorderRED);
                 labelSkinBundle_Organic.setBorder(null);
                 clickedStarWarsBundle = false;
                 clickedSpaceShuttleBundle = true;
@@ -109,7 +111,7 @@ public class StoreScreen {
             public void mouseEntered(MouseEvent e) {
                 if(!clickedSpaceShuttleBundle) {
                     playButtonHoverSound();
-                    labelSkinBundle_SpaceShuttle.setBorder(new LineBorder(Color.WHITE));
+                    labelSkinBundle_SpaceShuttle.setBorder(lineBorderWHITE);
                 }
             }
 
@@ -127,7 +129,7 @@ public class StoreScreen {
                 playButtonSelectSound();
                 labelSkinBundle_StarWars.setBorder(null);
                 labelSkinBundle_SpaceShuttle.setBorder(null);
-                labelSkinBundle_Organic.setBorder(new LineBorder(Color.RED));
+                labelSkinBundle_Organic.setBorder(lineBorderRED);
                 clickedStarWarsBundle = false;
                 clickedSpaceShuttleBundle = false;
                 clickedOrganicBundle = true;
@@ -137,7 +139,7 @@ public class StoreScreen {
             public void mouseEntered(MouseEvent e) {
                 if(!clickedOrganicBundle) {
                     playButtonHoverSound();
-                    labelSkinBundle_Organic.setBorder(new LineBorder(Color.WHITE));
+                    labelSkinBundle_Organic.setBorder(lineBorderWHITE);
                 }
             }
 
