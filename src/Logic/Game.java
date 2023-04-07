@@ -2,6 +2,11 @@ package Logic;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
 import javax.swing.*;
 
 public class Game extends JPanel {
@@ -27,6 +32,7 @@ public class Game extends JPanel {
     public boolean starter = true;
     private boolean shot, gameOver = false;
     private boolean pause = false;
+    private boolean game = false;
 
     private final Point[] pixel;
 
@@ -101,6 +107,11 @@ public class Game extends JPanel {
             g.fillRect(lifePos.x + 80, lifePos.y, ENEMY_SIZE, ENEMY_SIZE);
 
         }
+
+        if (game) {
+            g.setColor(new Color(116, 108, 108, 38));
+            g.fillRect(0, 0, 500, 500);
+        }
     }
 
     public void start() {
@@ -112,7 +123,7 @@ public class Game extends JPanel {
 
     public void playerMovement() {
         while (true) {
-            if (playerThread.isAlive() && !pause) {
+            if (playerThread.isAlive() && !pause && !game) {
                 playerPos.x += playerDirectionX * PLAYER_SPEED;
                 playerPos.y += playerDirectionY * PLAYER_SPEED;
 
@@ -138,7 +149,7 @@ public class Game extends JPanel {
 
     public void enemyMovement() {
         while (true) {
-            if (enemyThread.isAlive() && !pause) {
+            if (enemyThread.isAlive() && !pause && !game) {
                 enemyPos_0.y += ENEMY_SPEED;
                 enemyPos_1.y += ENEMY_SPEED + 2;
                 enemyPos_2.y += ENEMY_SPEED + 3;
@@ -149,26 +160,32 @@ public class Game extends JPanel {
                 if (enemyPos_0.y > 440) {
                     enemyPos_0.setLocation((int) (Math.random() * 470), 0);
                     score++;
+                    playScore();
                 }
                 if (enemyPos_1.y > 440) {
                     enemyPos_1.setLocation((int) (Math.random() * 470), 0);
                     score++;
+                    playScore();
                 }
                 if (enemyPos_2.y > 440) {
                     enemyPos_2.setLocation((int) (Math.random() * 470), 0);
                     score++;
+                    playScore();
                 }
                 if (enemyPos_3.y > 440) {
                     enemyPos_3.setLocation((int) (Math.random() * 470), 0);
                     score++;
+                    playScore();
                 }
                 if (enemyPos_4.y > 440) {
                     enemyPos_4.setLocation((int) (Math.random() * 470), 0);
                     score++;
+                    playScore();
                 }
                 if (enemyPos_5.y > 440) {
                     enemyPos_5.setLocation((int) (Math.random() * 470), 0);
                     score++;
+                    playScore();
                 }
                 repaint();
                 try {
@@ -232,25 +249,95 @@ public class Game extends JPanel {
 
             if (panelPlayer.bounds().intersects(panelEnemy_0.getBounds()) || panelPlayer.bounds().intersects(panelEnemy_1.getBounds()) || panelPlayer.bounds().intersects(panelEnemy_2.getBounds()) || panelPlayer.bounds().intersects(panelEnemy_3.getBounds()) || panelPlayer.bounds().intersects(panelEnemy_4.getBounds()) || panelPlayer.bounds().intersects(panelEnemy_5.getBounds())) {
                 life--;
+
+                enemyPos_0.setLocation((int) (Math.random() * 470), 0);
+                enemyPos_1.setLocation((int) (Math.random() * 470), 0);
+                enemyPos_2.setLocation((int) (Math.random() * 470), 0);
+                enemyPos_3.setLocation((int) (Math.random() * 470), 0);
+                enemyPos_4.setLocation((int) (Math.random() * 470), 0);
+                enemyPos_5.setLocation((int) (Math.random() * 470), 0);
+
+                playerPos.setLocation(230, 400);
+                beamPos.setLocation(playerPos.x + PLAYER_SIZE / 2 - 2, playerPos.y + PLAYER_SIZE);
+
+                game = true;
+
+                try {
+                    File file = new File("C:\\GitHub Projekte\\GalaxyWars\\src\\Sounds\\snd_hurt.wav");
+                    AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
+                    Clip clip = AudioSystem.getClip();
+                    clip.open(audioInputStream);
+
+                    FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+                    gainControl.setValue(-16.0f);
+
+                    clip.start();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+
                 if (life == 0) {
+                    try {
+                        File file = new File("C:\\GitHub Projekte\\GalaxyWars\\src\\Sounds\\snd_game_over.wav");
+                        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
+                        Clip clip = AudioSystem.getClip();
+                        clip.open(audioInputStream);
+                        FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+                        gainControl.setValue(-16.0f);
+                        clip.start();
+
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+
+                    game = false;
                     gameOver = true;
                     playerThread.stop();
                     enemyThread.stop();
                     collisonThread.stop();
                 }
                 try {
-                    Thread.sleep(300);
+                    Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
+                game = false;
             }
         }
     }
 
     public void asteroidHitAction() {
+        try {
+            File file = new File("C:\\GitHub Projekte\\GalaxyWars\\src\\Sounds\\snd_asteroid_explosion.wav");
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            gainControl.setValue(-22.0f);
+            clip.start();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
         shot = false;
         beamPos.setLocation(playerPos.x + PLAYER_SIZE / 2 - 2, playerPos.y + PLAYER_SIZE);
         score += 10;
+        playScore();
+    }
+
+    public void playScore() {
+        try {
+            File file = new File("C:\\GitHub Projekte\\GalaxyWars\\src\\Sounds\\snd_Score.wav");
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            gainControl.setValue(-16.0f);
+            clip.start();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public void handleKeyPressed(KeyEvent e) {
@@ -269,7 +356,24 @@ public class Game extends JPanel {
                     pause = false;
                 }
             }
-            case KeyEvent.VK_SPACE -> shot = true;
+            case KeyEvent.VK_SPACE -> {
+                if (!shot) {
+                    try {
+                        File file = new File("C:\\GitHub Projekte\\GalaxyWars\\src\\Sounds\\snd_laser.wav");
+                        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
+                        Clip clip = AudioSystem.getClip();
+                        clip.open(audioInputStream);
+                        FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+                        gainControl.setValue(-22.0f);
+                        clip.start();
+
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                shot = true;
+            }
+
         }
     }
 
@@ -288,27 +392,11 @@ public class Game extends JPanel {
         this.gameOver = gameOver;
     }
 
-    public boolean isStarter() {
-        return starter;
-    }
-
-    public void setStarter(boolean starter) {
-        this.starter = starter;
-    }
-
     public int getScore() {
         return score;
     }
 
-    public void setScore(int score) {
-        this.score = score;
-    }
-
     public boolean isPause() {
         return pause;
-    }
-
-    public void setPause(boolean pause) {
-        this.pause = pause;
     }
 }
