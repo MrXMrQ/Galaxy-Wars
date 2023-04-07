@@ -27,7 +27,7 @@ public class TitleScreen {
         myScreen = new MyScreen();
         myScreen.setTitle("Menu");
 
-        ImageIcon icon = new ImageIcon("C:\\GitHub Projekte\\GalaxyWars\\src\\Sprites\\Icon.png");
+        ImageIcon icon = new ImageIcon("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sprites\\Icon.png");
         myScreen.setIconImage(icon.getImage());
 
         layeredPane = myScreen.getLayeredPane();
@@ -52,7 +52,7 @@ public class TitleScreen {
                     }
                     if (e.getKeyCode() == KeyEvent.VK_ESCAPE && game.isPause() && !inMenu) {
                         labelPause = new JLabel();
-                        ImageIcon imagePause = new ImageIcon("C:\\GitHub Projekte\\GalaxyWars\\src\\Sprites\\Pause.png");
+                        ImageIcon imagePause = new ImageIcon("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sprites\\Pause.png");
                         labelPause.setIcon(imagePause);
                         labelPause.setBounds(0, 0, 500, 500);
                         layeredPane.add(labelPause, Integer.valueOf(1));
@@ -92,6 +92,11 @@ public class TitleScreen {
                 gameOverThread.start();
                 return;
             }
+            try {
+                Thread.sleep(16);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -112,7 +117,7 @@ public class TitleScreen {
             if (game.isGameOver()) {
                 game.setGameOver(false);
                 JLabel gameOver = new JLabel();
-                ImageIcon imageGameOver = new ImageIcon("C:\\GitHub Projekte\\GalaxyWars\\src\\Sprites\\GameOver.png");
+                ImageIcon imageGameOver = new ImageIcon("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sprites\\GameOver.png");
                 gameOver.setIcon(imageGameOver);
                 gameOver.setBounds(0, 0, 500, 500);
                 layeredPane.add(gameOver, Integer.valueOf(2));
@@ -140,7 +145,7 @@ public class TitleScreen {
         JLabel labelOptionsButton = new JLabel("options", SwingConstants.CENTER);
         JLabel labelStoreButton = new JLabel("store", SwingConstants.CENTER);
 
-        ImageIcon imageHeadline = new ImageIcon("C:\\GitHub Projekte\\GalaxyWars\\src\\Sprites\\GalaxyWars.png");
+        ImageIcon imageHeadline = new ImageIcon("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sprites\\GalaxyWars.png");
 
         labelHeadline.setIcon(imageHeadline);
 
@@ -244,7 +249,7 @@ public class TitleScreen {
         JLabel labelTryAgainButton = new JLabel("Try again", SwingUtilities.CENTER);
         JLabel labelQuitButton = new JLabel("Quit", SwingUtilities.CENTER);
 
-        ImageIcon imageGameOverHeadline = new ImageIcon("C:\\GitHub Projekte\\GalaxyWars\\src\\Sprites\\GameOverHeadline.png");
+        ImageIcon imageGameOverHeadline = new ImageIcon("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sprites\\GameOverHeadline.png");
         labelGameOverHeadline.setIcon(imageGameOverHeadline);
 
         labelMenuButton.setFont(new Font("Retro Computer", Font.BOLD, 20));
@@ -336,7 +341,7 @@ public class TitleScreen {
 
     public void addReady() {
         labelReady = new JLabel();
-        ImageIcon imageReady = new ImageIcon("C:\\GitHub Projekte\\GalaxyWars\\src\\Sprites\\Ready.png");
+        ImageIcon imageReady = new ImageIcon("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sprites\\Ready.png");
         labelReady.setIcon(imageReady);
         labelReady.setBounds(0, 0, 500, 500);
         layeredPane.add(labelReady, Integer.valueOf(1));
@@ -360,7 +365,7 @@ public class TitleScreen {
 
     public void playClickButtonSound() {
         try {
-            File file = new File("C:\\GitHub Projekte\\GalaxyWars\\src\\Sounds\\snd_button_select.wav");
+            File file = new File("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sounds\\snd_button_select.wav");
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
             Clip clip = AudioSystem.getClip();
             clip.open(audioInputStream);
@@ -375,7 +380,7 @@ public class TitleScreen {
 
     public void playHoverButtonSound() {
         try {
-            File file = new File("C:\\GitHub Projekte\\GalaxyWars\\src\\Sounds\\snd_button_hover.wav");
+            File file = new File("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sounds\\snd_button_hover.wav");
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
             Clip clip = AudioSystem.getClip();
             clip.open(audioInputStream);

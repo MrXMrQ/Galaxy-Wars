@@ -263,7 +263,7 @@ public class Game extends JPanel {
                 game = true;
 
                 try {
-                    File file = new File("C:\\GitHub Projekte\\GalaxyWars\\src\\Sounds\\snd_hurt.wav");
+                    File file = new File("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sounds\\snd_hurt.wav");
                     AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
                     Clip clip = AudioSystem.getClip();
                     clip.open(audioInputStream);
@@ -278,7 +278,7 @@ public class Game extends JPanel {
 
                 if (life == 0) {
                     try {
-                        File file = new File("C:\\GitHub Projekte\\GalaxyWars\\src\\Sounds\\snd_game_over.wav");
+                        File file = new File("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sounds\\snd_game_over.wav");
                         AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
                         Clip clip = AudioSystem.getClip();
                         clip.open(audioInputStream);
@@ -308,7 +308,7 @@ public class Game extends JPanel {
 
     public void asteroidHitAction() {
         try {
-            File file = new File("C:\\GitHub Projekte\\GalaxyWars\\src\\Sounds\\snd_asteroid_explosion.wav");
+            File file = new File("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sounds\\snd_asteroid_explosion.wav");
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
             Clip clip = AudioSystem.getClip();
             clip.open(audioInputStream);
@@ -327,7 +327,7 @@ public class Game extends JPanel {
 
     public void playScore() {
         try {
-            File file = new File("C:\\GitHub Projekte\\GalaxyWars\\src\\Sounds\\snd_Score.wav");
+            File file = new File("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sounds\\snd_Score.wav");
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
             Clip clip = AudioSystem.getClip();
             clip.open(audioInputStream);
@@ -359,7 +359,7 @@ public class Game extends JPanel {
             case KeyEvent.VK_SPACE -> {
                 if (!shot) {
                     try {
-                        File file = new File("C:\\GitHub Projekte\\GalaxyWars\\src\\Sounds\\snd_laser.wav");
+                        File file = new File("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sounds\\snd_laser.wav");
                         AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
                         Clip clip = AudioSystem.getClip();
                         clip.open(audioInputStream);
