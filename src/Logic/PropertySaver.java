@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-//Properties properties = loadProperties();
 
 public class PropertySaver extends Properties{
     private static final String PROPERTIES_FILE = "config.properties";
@@ -23,6 +22,7 @@ public class PropertySaver extends Properties{
             }
         } else {
             properties.setProperty("totalScore", String.valueOf(score));
+
             saveProperties(properties);
         }
         return properties;

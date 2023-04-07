@@ -36,7 +36,7 @@ public class Game extends JPanel {
     private boolean game = false;
 
     private final Point[] pixel;
-    private Properties properties;
+    private final Properties properties;
 
     public Game() {
         setBounds(0, 0, 500, 500);

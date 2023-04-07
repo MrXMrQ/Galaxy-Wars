@@ -278,7 +278,7 @@ public class TitleScreen {
             }
         });
 
-        layeredPane = new Store().addStore(layeredPane);
+        layeredPane = new StoreScreen().addStore(layeredPane);
     }
 
     public void addGameOver() {
@@ -290,8 +290,8 @@ public class TitleScreen {
 
         JLabel labelGameOverHeadline = new JLabel();
         JLabel labelMenuButton = new JLabel("menu", SwingUtilities.CENTER);
-        JLabel labelTryAgainButton = new JLabel("Try again", SwingUtilities.CENTER);
-        JLabel labelQuitButton = new JLabel("Quit", SwingUtilities.CENTER);
+        JLabel labelTryAgainButton = new JLabel("try again", SwingUtilities.CENTER);
+        JLabel labelQuitButton = new JLabel("quit", SwingUtilities.CENTER);
 
         ImageIcon imageGameOverHeadline = new ImageIcon("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sprites\\GameOverHeadline.png");
         labelGameOverHeadline.setIcon(imageGameOverHeadline);

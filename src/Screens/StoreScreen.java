@@ -14,7 +14,7 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.Properties;
 
-public class Store {
+public class StoreScreen {
     Properties properties = PropertySaver.loadProperties();
     private boolean clickedStarWarsBundle, clickedSpaceShuttleBundle, clickedOrganicBundle = false;
 
@@ -29,8 +29,12 @@ public class Store {
         JLabel labelTotalScore = new JLabel("points: " + properties.getProperty("totalScore"));
 
         ImageIcon imageStoreHeadline = new ImageIcon("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sprites\\Store_Headline.png");
+        ImageIcon imageTemplateSkins = new ImageIcon("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sprites\\TemplateSkins.png");
 
         labelStoreHeadline.setIcon(imageStoreHeadline);
+        labelSkinBundle_StarWars.setIcon(imageTemplateSkins);
+        labelSkinBundle_SpaceShuttle.setIcon(imageTemplateSkins);
+        labelSkinBundle_Organic.setIcon(imageTemplateSkins);
 
         labelStoreHeadline.setBounds(0, 0, 500, 100);
         labelSkinBundle_StarWars.setBounds(30, 130, 300, 50);
@@ -41,9 +45,7 @@ public class Store {
         labelEquipButton.setBounds(245, 400, 90, 25);
         labelTotalScore.setBounds(30,100,250,25);
 
-        labelCurrentSkin.setBackground(Color.YELLOW);
-
-        labelCurrentSkin.setOpaque(true);
+        labelCurrentSkin.setBorder(new LineBorder(Color.WHITE));
 
         Font retro = new Font("Retro Computer", Font.BOLD, 20);
         labelBuyButton.setFont(retro);
@@ -214,4 +216,3 @@ public class Store {
         }
     }
 }
-
