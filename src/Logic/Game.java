@@ -1,13 +1,14 @@
 package Logic;
 
-import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.io.File;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.io.File;
+import java.util.Properties;
 
 public class Game extends JPanel {
     //PLAYER
@@ -35,6 +36,7 @@ public class Game extends JPanel {
     private boolean game = false;
 
     private final Point[] pixel;
+    private Properties properties;
 
     public Game() {
         setBounds(0, 0, 500, 500);
@@ -66,6 +68,8 @@ public class Game extends JPanel {
         for (int i = 0; i < pixel.length; i++) {
             pixel[i] = new Point((int) (Math.random() * 500), (int) (Math.random() * 500));
         }
+
+        properties = PropertySaver.loadProperties();
     }
 
     public void paintComponent(Graphics g) {
@@ -292,6 +296,11 @@ public class Game extends JPanel {
 
                     game = false;
                     gameOver = true;
+
+                    int totalScore = Integer.parseInt(properties.getProperty("totalScore")) + score;
+
+                    properties.setProperty("totalScore", String.valueOf(totalScore));
+                    PropertySaver.saveProperties(properties);
                     playerThread.stop();
                     enemyThread.stop();
                     collisonThread.stop();
@@ -373,7 +382,6 @@ public class Game extends JPanel {
                 }
                 shot = true;
             }
-
         }
     }
 

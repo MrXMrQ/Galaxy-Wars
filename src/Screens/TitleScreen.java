@@ -1,6 +1,8 @@
 package Screens;
 
 import Logic.Game;
+import Logic.PropertySaver;
+
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -12,25 +14,30 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.util.Properties;
 
 public class TitleScreen {
-    public static MyScreen myScreen;
+    public MyScreen myScreen;
     public Game game;
-    public boolean remove = true;
-    JLayeredPane layeredPane;
-    Thread gameOverThread, thread, scoreThread;
-    JLabel labelReady, labelPause;
-    JLabel labelScore;
-    private boolean inMenu = true;
+    public boolean remove, inMenu = true;
+    public Properties properties;
+
+    public JLayeredPane layeredPane;
+    private final Thread gameOverThread, thread, scoreThread;
+    private JLabel labelReady, labelPause, labelScore;
+
+    private Clip clip;
 
     public TitleScreen() {
+        playBackgroundMusic();
         myScreen = new MyScreen();
         myScreen.setTitle("Menu");
-
         ImageIcon icon = new ImageIcon("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sprites\\Icon.png");
         myScreen.setIconImage(icon.getImage());
 
         layeredPane = myScreen.getLayeredPane();
+
+        properties = PropertySaver.loadProperties();
 
         addMenu();
 
@@ -170,7 +177,8 @@ public class TitleScreen {
         labelStartButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                playClickButtonSound();
+                clip.stop();
+                playButtonSelectSound();
                 myScreen.setTitle("Galaxy wars - game");
 
                 layeredPane.removeAll();
@@ -187,7 +195,7 @@ public class TitleScreen {
             @Override
             public void mouseEntered(MouseEvent e) {
                 labelStartButton.setForeground(Color.YELLOW);
-                playHoverButtonSound();
+                playButtonHoverSound();
             }
 
             @Override
@@ -199,14 +207,13 @@ public class TitleScreen {
         labelOptionsButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                playClickButtonSound();
-                addOptions();
+                playButtonSelectSound();
             }
 
             @Override
             public void mouseEntered(MouseEvent e) {
                 labelOptionsButton.setForeground(Color.YELLOW);
-                playHoverButtonSound();
+                playButtonHoverSound();
             }
 
             @Override
@@ -218,14 +225,16 @@ public class TitleScreen {
         labelStoreButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                playClickButtonSound();
+                clip.stop();
+                playButtonSelectSound();
+                layeredPane.removeAll();
                 addStore();
             }
 
             @Override
             public void mouseEntered(MouseEvent e) {
                 labelStoreButton.setForeground(Color.YELLOW);
-                playHoverButtonSound();
+                playButtonHoverSound();
             }
 
             @Override
@@ -235,6 +244,41 @@ public class TitleScreen {
         });
 
         layeredPane.repaint();
+    }
+
+    public void addStore() {
+        RectanglePanel rectanglePanel = new RectanglePanel();
+        rectanglePanel.setBounds(0, 0, 500, 500);
+        layeredPane.add(rectanglePanel, Integer.valueOf(0));
+
+        JLabel labelBackButton = new JLabel("<-", SwingUtilities.CENTER);
+        labelBackButton.setBounds(30, 400, 50, 25);
+        labelBackButton.setFont(new Font("Retro Computer", Font.BOLD, 20));
+        labelBackButton.setForeground(Color.WHITE);
+        layeredPane.add(labelBackButton, Integer.valueOf(1));
+
+        labelBackButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                playBackgroundMusic();
+                playButtonSelectSound();
+                layeredPane.removeAll();
+                addMenu();
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                playButtonHoverSound();
+                labelBackButton.setForeground(Color.YELLOW);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                labelBackButton.setForeground(Color.WHITE);
+            }
+        });
+
+        layeredPane = new Store().addStore(layeredPane);
     }
 
     public void addGameOver() {
@@ -273,7 +317,8 @@ public class TitleScreen {
         labelMenuButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                playClickButtonSound();
+                playBackgroundMusic();
+                playButtonSelectSound();
                 layeredPane.removeAll();
                 layeredPane.repaint();
                 addMenu();
@@ -282,7 +327,7 @@ public class TitleScreen {
             @Override
             public void mouseEntered(MouseEvent e) {
                 labelMenuButton.setForeground(Color.YELLOW);
-                playHoverButtonSound();
+                playButtonHoverSound();
             }
 
             @Override
@@ -294,7 +339,7 @@ public class TitleScreen {
         labelTryAgainButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                playClickButtonSound();
+                playButtonSelectSound();
                 remove = true;
                 inMenu = false;
                 layeredPane.removeAll();
@@ -310,7 +355,7 @@ public class TitleScreen {
             @Override
             public void mouseEntered(MouseEvent e) {
                 labelTryAgainButton.setForeground(Color.YELLOW);
-                playHoverButtonSound();
+                playButtonHoverSound();
             }
 
             @Override
@@ -322,14 +367,14 @@ public class TitleScreen {
         labelQuitButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                playClickButtonSound();
+                playButtonSelectSound();
                 System.exit(1);
             }
 
             @Override
             public void mouseEntered(MouseEvent e) {
                 labelQuitButton.setForeground(Color.YELLOW);
-                playHoverButtonSound();
+                playButtonHoverSound();
             }
 
             @Override
@@ -355,15 +400,7 @@ public class TitleScreen {
         layeredPane.add(labelScore, Integer.valueOf(2));
     }
 
-    public void addStore() {
-
-    }
-
-    public void addOptions() {
-
-    }
-
-    public void playClickButtonSound() {
+    public void playButtonSelectSound() {
         try {
             File file = new File("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sounds\\snd_button_select.wav");
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
@@ -378,13 +415,28 @@ public class TitleScreen {
         }
     }
 
-    public void playHoverButtonSound() {
+    public void playButtonHoverSound() {
         try {
             File file = new File("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sounds\\snd_button_hover.wav");
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
             Clip clip = AudioSystem.getClip();
             clip.open(audioInputStream);
             clip.start();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void playBackgroundMusic() {
+        try {
+            File file = new File("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Music\\msc_Menu.wav");
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
+            clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            gainControl.setValue(-20.0f);
+            clip.loop(Clip.LOOP_CONTINUOUSLY);
 
         } catch (Exception ex) {
             ex.printStackTrace();
