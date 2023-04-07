@@ -1,7 +1,7 @@
-package Screens;
+package screens;
 
-import Logic.Game;
-import Logic.PropertySaver;
+import logic.Game;
+import logic.PropertySaver;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -28,11 +28,12 @@ public class TitleScreen {
 
     private Clip clip;
 
+
     public TitleScreen() {
         playBackgroundMusic();
         myScreen = new MyScreen();
         myScreen.setTitle("Menu");
-        ImageIcon icon = new ImageIcon("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sprites\\Icon.png");
+        ImageIcon icon = new ImageIcon("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sprites\\icon.png");
         myScreen.setIconImage(icon.getImage());
 
         layeredPane = myScreen.getLayeredPane();
@@ -59,7 +60,7 @@ public class TitleScreen {
                     }
                     if (e.getKeyCode() == KeyEvent.VK_ESCAPE && game.isPause() && !inMenu) {
                         labelPause = new JLabel();
-                        ImageIcon imagePause = new ImageIcon("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sprites\\Pause.png");
+                        ImageIcon imagePause = new ImageIcon("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sprites\\pause.png");
                         labelPause.setIcon(imagePause);
                         labelPause.setBounds(0, 0, 500, 500);
                         layeredPane.add(labelPause, Integer.valueOf(1));
@@ -80,15 +81,23 @@ public class TitleScreen {
     }
 
     private static class RectanglePanel extends JPanel {
-        @Override
+        Point[] pixel;
+        public RectanglePanel() {
+             pixel = new Point[1000];
+
+            for (int i = 0; i < pixel.length; i++) {
+                pixel[i] = new Point((int) (Math.random() * 500), (int) (Math.random() * 500));
+            }
+        }
+
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
             g.setColor(Color.BLACK);
             g.fillRect(0, 0, 500, 500);
 
             g.setColor(Color.WHITE);
-            for (int i = 0; i < 1200; i++) {
-                g.fillRect((int) (Math.random() * 500), (int) (Math.random() * 500), 1, 1);
+            for (Point point : pixel) {
+                g.fillRect(point.x, point.y, 1, 1);
             }
         }
     }
@@ -124,7 +133,7 @@ public class TitleScreen {
             if (game.isGameOver()) {
                 game.setGameOver(false);
                 JLabel gameOver = new JLabel();
-                ImageIcon imageGameOver = new ImageIcon("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sprites\\GameOver.png");
+                ImageIcon imageGameOver = new ImageIcon("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sprites\\game_over.png");
                 gameOver.setIcon(imageGameOver);
                 gameOver.setBounds(0, 0, 500, 500);
                 layeredPane.add(gameOver, Integer.valueOf(2));
@@ -152,7 +161,7 @@ public class TitleScreen {
         JLabel labelOptionsButton = new JLabel("options", SwingConstants.CENTER);
         JLabel labelStoreButton = new JLabel("store", SwingConstants.CENTER);
 
-        ImageIcon imageHeadline = new ImageIcon("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sprites\\GalaxyWars.png");
+        ImageIcon imageHeadline = new ImageIcon("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sprites\\galaxy_wars.png");
 
         labelHeadline.setIcon(imageHeadline);
 
@@ -293,7 +302,7 @@ public class TitleScreen {
         JLabel labelTryAgainButton = new JLabel("try again", SwingUtilities.CENTER);
         JLabel labelQuitButton = new JLabel("quit", SwingUtilities.CENTER);
 
-        ImageIcon imageGameOverHeadline = new ImageIcon("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sprites\\GameOverHeadline.png");
+        ImageIcon imageGameOverHeadline = new ImageIcon("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sprites\\game_over_headline.png");
         labelGameOverHeadline.setIcon(imageGameOverHeadline);
 
         labelMenuButton.setFont(new Font("Retro Computer", Font.BOLD, 20));
@@ -386,7 +395,7 @@ public class TitleScreen {
 
     public void addReady() {
         labelReady = new JLabel();
-        ImageIcon imageReady = new ImageIcon("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sprites\\Ready.png");
+        ImageIcon imageReady = new ImageIcon("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sprites\\ready.png");
         labelReady.setIcon(imageReady);
         labelReady.setBounds(0, 0, 500, 500);
         layeredPane.add(labelReady, Integer.valueOf(1));
@@ -430,7 +439,7 @@ public class TitleScreen {
 
     public void playBackgroundMusic() {
         try {
-            File file = new File("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Music\\msc_Menu.wav");
+            File file = new File("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Music\\msc_menu.wav");
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
             clip = AudioSystem.getClip();
             clip.open(audioInputStream);

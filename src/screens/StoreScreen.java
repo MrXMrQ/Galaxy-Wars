@@ -1,6 +1,6 @@
-package Screens;
+package screens;
 
-import Logic.PropertySaver;
+import logic.PropertySaver;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -30,8 +30,8 @@ public class StoreScreen {
         JLabel labelEquipButton = new JLabel("equip", SwingUtilities.CENTER);
         JLabel labelTotalScore = new JLabel("points: " + properties.getProperty("totalScore"));
 
-        ImageIcon imageStoreHeadline = new ImageIcon("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sprites\\Store_Headline.png");
-        ImageIcon imageTemplateSkins = new ImageIcon("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sprites\\TemplateSkins.png");
+        ImageIcon imageStoreHeadline = new ImageIcon("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sprites\\store_headline.png");
+        ImageIcon imageTemplateSkins = new ImageIcon("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sprites\\template_skins.png");
 
         labelStoreHeadline.setIcon(imageStoreHeadline);
         labelSkinBundle_StarWars.setIcon(imageTemplateSkins);

@@ -1,4 +1,4 @@
-package Logic;
+package logic;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -37,6 +37,8 @@ public class Game extends JPanel {
 
     private final Point[] pixel;
     private final Properties properties;
+
+    private final Image imageLifes = Toolkit.getDefaultToolkit().getImage("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sprites\\life.png");
 
     public Game() {
         setBounds(0, 0, 500, 500);
@@ -99,17 +101,14 @@ public class Game extends JPanel {
 
         g.setColor(Color.BLUE);
         if (life == 3) {
-            g.fillRect(lifePos.x, lifePos.y, ENEMY_SIZE, ENEMY_SIZE);
-            g.fillRect(lifePos.x + 40, lifePos.y, ENEMY_SIZE, ENEMY_SIZE);
-            g.fillRect(lifePos.x + 80, lifePos.y, ENEMY_SIZE, ENEMY_SIZE);
-
+            g.drawImage(imageLifes, lifePos.x, lifePos.y, null);
+            g.drawImage(imageLifes, lifePos.x + 40, lifePos.y, null);
+            g.drawImage(imageLifes, lifePos.x + 80, lifePos.y, null);
         } else if (life == 2) {
-            g.fillRect(lifePos.x + 40, lifePos.y, ENEMY_SIZE, ENEMY_SIZE);
-            g.fillRect(lifePos.x + 80, lifePos.y, ENEMY_SIZE, ENEMY_SIZE);
-
+            g.drawImage(imageLifes, lifePos.x + 40, lifePos.y, null);
+            g.drawImage(imageLifes, lifePos.x + 80, lifePos.y, null);
         } else if (life == 1) {
-            g.fillRect(lifePos.x + 80, lifePos.y, ENEMY_SIZE, ENEMY_SIZE);
-
+            g.drawImage(imageLifes, lifePos.x + 80, lifePos.y, null);
         }
 
         if (game) {
@@ -148,6 +147,7 @@ public class Game extends JPanel {
                     e.printStackTrace();
                 }
             }
+
         }
     }
 
@@ -335,17 +335,19 @@ public class Game extends JPanel {
     }
 
     public void playScore() {
-        try {
-            File file = new File("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sounds\\snd_Score.wav");
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
-            Clip clip = AudioSystem.getClip();
-            clip.open(audioInputStream);
-            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            gainControl.setValue(-16.0f);
-            clip.start();
+        if(score % 10 == 0 && score != 0) {
+            try {
+                File file = new File("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sounds\\snd_Score.wav");
+                AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
+                Clip clip = AudioSystem.getClip();
+                clip.open(audioInputStream);
+                FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+                gainControl.setValue(-16.0f);
+                clip.start();
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
