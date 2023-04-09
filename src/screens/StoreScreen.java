@@ -17,8 +17,11 @@ import java.util.Properties;
 public class StoreScreen {
     Properties properties = PropertySaver.loadProperties();
     private boolean clickedStarWarsBundle, clickedSpaceShuttleBundle, clickedOrganicBundle = false;
-    private final LineBorder lineBorderRED = new LineBorder(Color.RED, 4);
+    private final LineBorder lineBorderRED = new LineBorder(Color.GRAY, 4);
     private final LineBorder lineBorderWHITE = new LineBorder(Color.WHITE, 4);
+    private int price;
+    private int totalScore = Integer.parseInt(properties.getProperty("totalScore"));
+    private boolean boughtStarWars = Boolean.parseBoolean(properties.getProperty("boughtStarWars"));
 
     public JLayeredPane addStore(JLayeredPane layeredPane) {
         JLabel labelStoreHeadline = new JLabel();
@@ -26,43 +29,54 @@ public class StoreScreen {
         JLabel labelSkinBundle_SpaceShuttle = new JLabel();
         JLabel labelSkinBundle_Organic = new JLabel();
         JLabel labelCurrentSkin = new JLabel();
+        JLabel labelReset = new JLabel("reset");
         JLabel labelBuyButton = new JLabel("buy", SwingUtilities.CENTER);
         JLabel labelEquipButton = new JLabel("equip", SwingUtilities.CENTER);
-        JLabel labelTotalScore = new JLabel("points: " + properties.getProperty("totalScore"));
+        JLabel labelTotalScore = new JLabel("points: " + totalScore);
 
-        ImageIcon imageStoreHeadline = new ImageIcon("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sprites\\store_headline.png");
-        ImageIcon imageTemplateSkins = new ImageIcon("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sprites\\template_skins.png");
+        ImageIcon imageStoreHeadline = new ImageIcon(".\\src\\Resources\\Sprites\\store_headline.png");
+        ImageIcon imageDefaultBundle = new ImageIcon(properties.getProperty("lastSkin"));
+        ImageIcon imageStarWarsBundle = new ImageIcon(".\\src\\Resources\\Sprites\\skins\\star_wars_bundle.png");
+
+        ImageIcon imageTemplateSkins = new ImageIcon(".\\src\\Resources\\Sprites\\template_skins.png");
 
         labelStoreHeadline.setIcon(imageStoreHeadline);
-        labelSkinBundle_StarWars.setIcon(imageTemplateSkins);
+        labelSkinBundle_StarWars.setIcon(imageStarWarsBundle);
+        labelCurrentSkin.setIcon(imageDefaultBundle);
+
         labelSkinBundle_SpaceShuttle.setIcon(imageTemplateSkins);
         labelSkinBundle_Organic.setIcon(imageTemplateSkins);
 
         labelStoreHeadline.setBounds(0, 0, 500, 100);
-        labelSkinBundle_StarWars.setBounds(30, 130, 300, 50);
-        labelSkinBundle_SpaceShuttle.setBounds(30, 210, 300, 50);
-        labelSkinBundle_Organic.setBounds(30, 290, 300, 50);
-        labelCurrentSkin.setBounds(400, 130, 50, 210);
+        labelTotalScore.setBounds(30,75,250,25);
+        labelSkinBundle_StarWars.setBounds(30, 100, 300, 50);
+        labelSkinBundle_SpaceShuttle.setBounds(30, 175, 300, 50);
+        labelSkinBundle_Organic.setBounds(30, 250, 300, 50);
+        labelCurrentSkin.setBounds(30, 325, 300, 50);
+        labelReset.setBounds(360,338,250,25);
         labelBuyButton.setBounds(165, 400, 60, 25);
         labelEquipButton.setBounds(245, 400, 90, 25);
-        labelTotalScore.setBounds(30,100,250,25);
 
-        labelCurrentSkin.setBorder(new LineBorder(Color.WHITE));
+
+        labelCurrentSkin.setBorder(new LineBorder(Color.GREEN, 4));
 
         Font retro = new Font("Retro Computer", Font.BOLD, 20);
         labelBuyButton.setFont(retro);
         labelEquipButton.setFont(retro);
         labelTotalScore.setFont(retro);
+        labelReset.setFont(retro);
 
         labelBuyButton.setForeground(Color.WHITE);
         labelEquipButton.setForeground(Color.WHITE);
         labelTotalScore.setForeground(Color.WHITE);
+        labelReset.setForeground(Color.WHITE);
 
         layeredPane.add(labelStoreHeadline, Integer.valueOf(1));
         layeredPane.add(labelSkinBundle_StarWars, Integer.valueOf(1));
         layeredPane.add(labelSkinBundle_SpaceShuttle, Integer.valueOf(1));
         layeredPane.add(labelSkinBundle_Organic, Integer.valueOf(1));
         layeredPane.add(labelCurrentSkin, Integer.valueOf(1));
+        layeredPane.add(labelReset, Integer.valueOf(1));
         layeredPane.add(labelBuyButton, Integer.valueOf(1));
         layeredPane.add(labelEquipButton, Integer.valueOf(1));
         layeredPane.add(labelTotalScore, Integer.valueOf(1));
@@ -71,6 +85,7 @@ public class StoreScreen {
             @Override
             public void mouseClicked(MouseEvent e) {
                 playButtonSelectSound();
+                price = 1000000;
                 labelSkinBundle_StarWars.setBorder(lineBorderRED);
                 labelSkinBundle_SpaceShuttle.setBorder(null);
                 labelSkinBundle_Organic.setBorder(null);
@@ -154,7 +169,19 @@ public class StoreScreen {
         labelBuyButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                playButtonSelectSound();
+                if(clickedStarWarsBundle && totalScore >= price && !boughtStarWars) {
+                    playCashRegisterSound();
+                    totalScore -= 1000000;
+                    boughtStarWars = true;
+
+                    properties.setProperty("totalScore", String.valueOf(totalScore));
+                    properties.setProperty("boughtStarWars", String.valueOf(boughtStarWars));
+                    PropertySaver.saveProperties(properties);
+
+                    labelTotalScore.setText("points: " + totalScore);
+                } else {
+                    playAccessDeniedSound();
+                }
             }
 
             @Override
@@ -172,7 +199,19 @@ public class StoreScreen {
         labelEquipButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                playButtonSelectSound();
+                if (clickedStarWarsBundle && boughtStarWars) {
+                    playButtonSelectSound();
+                    properties.setProperty("playerPath", ".\\src\\Resources\\sprites\\skins\\star_wars_player.png");
+                    properties.setProperty("enemyPath", ".\\src\\Resources\\sprites\\skins\\star_wars_enemy.png");
+                    properties.setProperty("beamPath", ".\\src\\Resources\\sprites\\skins\\star_wars_beam.png");
+                    properties.setProperty("lastSkin", ".\\src\\Resources\\sprites\\skins\\star_wars_bundle.png");
+
+                    PropertySaver.saveProperties(properties);
+
+                    labelCurrentSkin.setIcon(imageStarWarsBundle);
+                } else {
+                    playAccessDeniedSound();
+                }
             }
 
             @Override
@@ -187,12 +226,40 @@ public class StoreScreen {
             }
         });
 
+        labelReset.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                playButtonSelectSound();
+
+                ImageIcon imageIconReset = new ImageIcon(".\\src\\Resources\\sprites\\skins\\default_skin_bundle.png");
+                labelCurrentSkin.setIcon(imageIconReset);
+
+                properties.setProperty("playerPath", ".\\src\\Resources\\sprites\\skins\\default_player.png");
+                properties.setProperty("enemyPath", ".\\src\\Resources\\sprites\\skins\\default_enemy.png");
+                properties.setProperty("beamPath", ".\\src\\Resources\\sprites\\skins\\default_beam.png");
+                properties.setProperty("lastSkin", ".\\src\\Resources\\sprites\\skins\\default_skin_bundle.png");
+
+                PropertySaver.saveProperties(properties);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                playButtonHoverSound();
+                labelReset.setForeground(Color.YELLOW);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                labelReset.setForeground(Color.WHITE);
+            }
+        });
+
         return layeredPane;
     }
 
     public void playButtonSelectSound() {
         try {
-            File file = new File("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sounds\\snd_button_select.wav");
+            File file = new File(".\\src\\Resources\\Sounds\\snd_button_select.wav");
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
             Clip clip = AudioSystem.getClip();
             clip.open(audioInputStream);
@@ -207,10 +274,40 @@ public class StoreScreen {
 
     public void playButtonHoverSound() {
         try {
-            File file = new File("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sounds\\snd_button_hover.wav");
+            File file = new File(".\\src\\Resources\\Sounds\\snd_button_hover.wav");
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
             Clip clip = AudioSystem.getClip();
             clip.open(audioInputStream);
+            clip.start();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void playCashRegisterSound() {
+        try {
+            File file = new File(".\\src\\Resources\\Sounds\\snd_cash.wav");
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            gainControl.setValue(-20.0f);
+            clip.start();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void playAccessDeniedSound() {
+        try {
+            File file = new File(".\\src\\Resources\\Sounds\\snd_access_denied.wav");
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            gainControl.setValue(-20.0f);
             clip.start();
 
         } catch (Exception ex) {

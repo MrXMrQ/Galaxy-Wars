@@ -21,7 +21,7 @@ public class Game extends JPanel {
     private int life;
     //ENEMY
     private static final int ENEMY_SIZE = 30;
-    private static final int ENEMY_SPEED = 3;
+    private static final int ENEMY_SPEED = 1;
 
     //Point
     private final Point enemyPos_0, enemyPos_1, enemyPos_2, enemyPos_3, enemyPos_4, enemyPos_5, beamPos, playerPos, lifePos;
@@ -36,9 +36,14 @@ public class Game extends JPanel {
     private boolean game = false;
 
     private final Point[] pixel;
-    private final Properties properties;
+    private Properties properties = PropertySaver.loadProperties();
 
-    private final Image imageLifes = Toolkit.getDefaultToolkit().getImage("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sprites\\life.png");
+    private final Image imageLifes = Toolkit.getDefaultToolkit().getImage(".\\src\\Resources\\Sprites\\skins\\life.png");
+
+    private final Image imagePlayer = Toolkit.getDefaultToolkit().getImage(properties.getProperty("playerPath"));
+    private final Image imageEnemy = Toolkit.getDefaultToolkit().getImage(properties.getProperty("enemyPath"));
+    private final Image imageBeam = Toolkit.getDefaultToolkit().getImage(properties.getProperty("beamPath"));
+
 
     public Game() {
         setBounds(0, 0, 500, 500);
@@ -59,7 +64,7 @@ public class Game extends JPanel {
         enemyPos_4 = new Point((int) (Math.random() * 470), 0);
         enemyPos_5 = new Point((int) (Math.random() * 470), 0);
 
-        beamPos = new Point(playerPos.x + PLAYER_SIZE / 2 - 2, playerPos.y + PLAYER_SIZE);
+        beamPos = new Point(playerPos.x + PLAYER_SIZE / 2 - 2, playerPos.y);
 
         playerThread = new Thread(this::playerMovement);
         enemyThread = new Thread(this::enemyMovement);
@@ -70,13 +75,12 @@ public class Game extends JPanel {
         for (int i = 0; i < pixel.length; i++) {
             pixel[i] = new Point((int) (Math.random() * 500), (int) (Math.random() * 500));
         }
-
-        properties = PropertySaver.loadProperties();
     }
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
+        //background
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, 500, 500);
 
@@ -85,21 +89,22 @@ public class Game extends JPanel {
             g.fillRect(point.x, point.y, 1, 1);
         }
 
-        g.setColor(Color.YELLOW);
-        g.fillRect(beamPos.x, beamPos.y, 5, -30);
+        //beam
+        g.drawImage(imageBeam, beamPos.x, beamPos.y - 30, null);
 
-        g.setColor(Color.RED);
-        g.fillRect(playerPos.x, playerPos.y, PLAYER_SIZE, PLAYER_SIZE);
+        //player
+        g.drawImage(imagePlayer, playerPos.x, playerPos.y, null);
 
+        //enemy
         g.setColor(Color.GRAY);
-        g.fillRect(enemyPos_0.x, enemyPos_0.y, ENEMY_SIZE, ENEMY_SIZE);
-        g.fillRect(enemyPos_1.x, enemyPos_1.y, ENEMY_SIZE, ENEMY_SIZE);
-        g.fillRect(enemyPos_2.x, enemyPos_2.y, ENEMY_SIZE, ENEMY_SIZE);
-        g.fillRect(enemyPos_3.x, enemyPos_3.y, ENEMY_SIZE, ENEMY_SIZE);
-        g.fillRect(enemyPos_4.x, enemyPos_4.y, ENEMY_SIZE, ENEMY_SIZE);
-        g.fillRect(enemyPos_5.x, enemyPos_5.y, ENEMY_SIZE, ENEMY_SIZE);
+        g.drawImage(imageEnemy, enemyPos_0.x, enemyPos_0.y, null);
+        g.drawImage(imageEnemy, enemyPos_1.x, enemyPos_1.y, null);
+        g.drawImage(imageEnemy, enemyPos_2.x, enemyPos_2.y, null);
+        g.drawImage(imageEnemy, enemyPos_3.x, enemyPos_3.y, null);
+        g.drawImage(imageEnemy, enemyPos_4.x, enemyPos_4.y, null);
+        g.drawImage(imageEnemy, enemyPos_5.x, enemyPos_5.y, null);
 
-        g.setColor(Color.BLUE);
+        //lifes
         if (life == 3) {
             g.drawImage(imageLifes, lifePos.x, lifePos.y, null);
             g.drawImage(imageLifes, lifePos.x + 40, lifePos.y, null);
@@ -223,7 +228,7 @@ public class Game extends JPanel {
             panelEnemy_4.setBounds(enemyPos_4.x, enemyPos_4.y, ENEMY_SIZE, ENEMY_SIZE);
             panelEnemy_5.setBounds(enemyPos_5.x, enemyPos_5.y, ENEMY_SIZE, ENEMY_SIZE);
 
-            panelBeam.setBounds(beamPos.x, beamPos.y, 5, 1);
+            panelBeam.setBounds(beamPos.x, beamPos.y - 1, 5, 1);
             panelBeam.setBackground(Color.BLUE);
 
             if (panelBeam.bounds().intersects(panelEnemy_0.getBounds())) {
@@ -267,7 +272,7 @@ public class Game extends JPanel {
                 game = true;
 
                 try {
-                    File file = new File("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sounds\\snd_hurt.wav");
+                    File file = new File(".\\src\\Resources\\Sounds\\snd_hurt.wav");
                     AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
                     Clip clip = AudioSystem.getClip();
                     clip.open(audioInputStream);
@@ -282,7 +287,7 @@ public class Game extends JPanel {
 
                 if (life == 0) {
                     try {
-                        File file = new File("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sounds\\snd_game_over.wav");
+                        File file = new File(".\\src\\Resources\\Sounds\\snd_game_over.wav");
                         AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
                         Clip clip = AudioSystem.getClip();
                         clip.open(audioInputStream);
@@ -293,11 +298,15 @@ public class Game extends JPanel {
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
-
                     game = false;
                     gameOver = true;
 
                     int totalScore = Integer.parseInt(properties.getProperty("totalScore")) + score;
+                    int highScore = Integer.parseInt(properties.getProperty("highScore"));
+
+                    if(score > highScore) {
+                        properties.setProperty("highScore", String.valueOf(score));
+                    }
 
                     properties.setProperty("totalScore", String.valueOf(totalScore));
                     PropertySaver.saveProperties(properties);
@@ -317,7 +326,7 @@ public class Game extends JPanel {
 
     public void asteroidHitAction() {
         try {
-            File file = new File("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sounds\\snd_asteroid_explosion.wav");
+            File file = new File(".\\src\\Resources\\Sounds\\snd_asteroid_explosion.wav");
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
             Clip clip = AudioSystem.getClip();
             clip.open(audioInputStream);
@@ -335,9 +344,9 @@ public class Game extends JPanel {
     }
 
     public void playScore() {
-        if(score % 10 == 0 && score != 0) {
+        if (score % 10 == 0 && score != 0) {
             try {
-                File file = new File("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sounds\\snd_Score.wav");
+                File file = new File(".\\src\\Resources\\Sounds\\snd_Score.wav");
                 AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
                 Clip clip = AudioSystem.getClip();
                 clip.open(audioInputStream);
@@ -370,7 +379,7 @@ public class Game extends JPanel {
             case KeyEvent.VK_SPACE -> {
                 if (!shot) {
                     try {
-                        File file = new File("C:\\GitHub Projekte\\GalaxyWars\\src\\Resources\\Sounds\\snd_laser.wav");
+                        File file = new File(".\\src\\Resources\\Sounds\\snd_laser.wav");
                         AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
                         Clip clip = AudioSystem.getClip();
                         clip.open(audioInputStream);

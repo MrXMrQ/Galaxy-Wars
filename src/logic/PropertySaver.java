@@ -10,6 +10,12 @@ import java.util.Properties;
 public class PropertySaver extends Properties{
     private static final String PROPERTIES_FILE = "config.properties";
     private static final int score = 0;
+    private static final int highScore = 0;
+    private static final String  playerPath = ".\\src\\Resources\\sprites\\skins\\default_player.png";
+    private static final String enemyPath = ".\\src\\Resources\\sprites\\skins\\default_enemy.png";
+    private static final String beamPath = ".\\src\\Resources\\sprites\\skins\\default_beam.png";
+    private static final String lastSkin = ".\\src\\Resources\\sprites\\skins\\default_skin_bundle.png";
+    private static final boolean boughtStarWars = false;
 
     public static Properties loadProperties() {
         Properties properties = new Properties();
@@ -22,6 +28,12 @@ public class PropertySaver extends Properties{
             }
         } else {
             properties.setProperty("totalScore", String.valueOf(score));
+            properties.setProperty("highScore", String.valueOf(highScore));
+            properties.setProperty("playerPath", playerPath);
+            properties.setProperty("enemyPath", enemyPath);
+            properties.setProperty("beamPath", beamPath);
+            properties.setProperty("lastSkin", lastSkin);
+            properties.setProperty("boughtStarWars", String.valueOf(boughtStarWars));
 
             saveProperties(properties);
         }
