@@ -21,7 +21,7 @@ public class Game extends JPanel {
     private int life;
     //ENEMY
     private static final int ENEMY_SIZE = 30;
-    private static final int ENEMY_SPEED = 1;
+    private static final int ENEMY_SPEED = 3;
 
     //Point
     private final Point enemyPos_0, enemyPos_1, enemyPos_2, enemyPos_3, enemyPos_4, enemyPos_5, beamPos, playerPos, lifePos;
@@ -36,13 +36,14 @@ public class Game extends JPanel {
     private boolean game = false;
 
     private final Point[] pixel;
-    private Properties properties = PropertySaver.loadProperties();
+    private final Properties properties = PropertySaver.loadProperties();
 
     private final Image imageLifes = Toolkit.getDefaultToolkit().getImage(".\\src\\Resources\\Sprites\\skins\\life.png");
 
     private final Image imagePlayer = Toolkit.getDefaultToolkit().getImage(properties.getProperty("playerPath"));
     private final Image imageEnemy = Toolkit.getDefaultToolkit().getImage(properties.getProperty("enemyPath"));
     private final Image imageBeam = Toolkit.getDefaultToolkit().getImage(properties.getProperty("beamPath"));
+    private final String shotSound = properties.getProperty("shotSound");
 
 
     public Game() {
@@ -89,9 +90,6 @@ public class Game extends JPanel {
             g.fillRect(point.x, point.y, 1, 1);
         }
 
-        //beam
-        g.drawImage(imageBeam, beamPos.x, beamPos.y - 30, null);
-
         //player
         g.drawImage(imagePlayer, playerPos.x, playerPos.y, null);
 
@@ -119,6 +117,11 @@ public class Game extends JPanel {
         if (game) {
             g.setColor(new Color(116, 108, 108, 38));
             g.fillRect(0, 0, 500, 500);
+        }
+
+        if(shot) {
+            //beam
+            g.drawImage(imageBeam, beamPos.x, beamPos.y - 30, null);
         }
     }
 
@@ -379,7 +382,7 @@ public class Game extends JPanel {
             case KeyEvent.VK_SPACE -> {
                 if (!shot) {
                     try {
-                        File file = new File(".\\src\\Resources\\Sounds\\snd_laser.wav");
+                        File file = new File(shotSound);
                         AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
                         Clip clip = AudioSystem.getClip();
                         clip.open(audioInputStream);

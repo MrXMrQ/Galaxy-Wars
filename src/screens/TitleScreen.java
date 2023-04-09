@@ -256,10 +256,6 @@ public class TitleScreen {
     }
 
     public void addStore() {
-        RectanglePanel rectanglePanel = new RectanglePanel();
-        rectanglePanel.setBounds(0, 0, 500, 500);
-        layeredPane.add(rectanglePanel, Integer.valueOf(0));
-
         JLabel labelBackButton = new JLabel("<-", SwingUtilities.CENTER);
         labelBackButton.setBounds(30, 400, 50, 25);
         labelBackButton.setFont(new Font("Retro Computer", Font.BOLD, 20));

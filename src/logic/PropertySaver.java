@@ -15,7 +15,9 @@ public class PropertySaver extends Properties{
     private static final String enemyPath = ".\\src\\Resources\\sprites\\skins\\default_enemy.png";
     private static final String beamPath = ".\\src\\Resources\\sprites\\skins\\default_beam.png";
     private static final String lastSkin = ".\\src\\Resources\\sprites\\skins\\default_skin_bundle.png";
+    private static final String shotSound = ".\\src\\Resources\\sounds\\snd_laser.wav";
     private static final boolean boughtStarWars = false;
+    private static final boolean boughtAlienEye = false;
 
     public static Properties loadProperties() {
         Properties properties = new Properties();
@@ -33,7 +35,9 @@ public class PropertySaver extends Properties{
             properties.setProperty("enemyPath", enemyPath);
             properties.setProperty("beamPath", beamPath);
             properties.setProperty("lastSkin", lastSkin);
+            properties.setProperty("shotSound", shotSound);
             properties.setProperty("boughtStarWars", String.valueOf(boughtStarWars));
+            properties.setProperty("boughtAlienEye", String.valueOf(boughtAlienEye));
 
             saveProperties(properties);
         }

@@ -16,65 +16,72 @@ import java.util.Properties;
 
 public class StoreScreen {
     Properties properties = PropertySaver.loadProperties();
-    private boolean clickedStarWarsBundle, clickedSpaceShuttleBundle, clickedOrganicBundle = false;
-    private final LineBorder lineBorderRED = new LineBorder(Color.GRAY, 4);
+    private boolean clickedStarWarsBundle, clickedSpaceShuttleBundle, clickedAlienEyeBundle = false;
+    private final LineBorder lineBorderGRAY = new LineBorder(Color.GRAY, 4);
     private final LineBorder lineBorderWHITE = new LineBorder(Color.WHITE, 4);
     private int price;
     private int totalScore = Integer.parseInt(properties.getProperty("totalScore"));
+    private final int highScore = Integer.parseInt(properties.getProperty("highScore"));
     private boolean boughtStarWars = Boolean.parseBoolean(properties.getProperty("boughtStarWars"));
+    private boolean boughtAlienEye = Boolean.parseBoolean(properties.getProperty("boughtAlienEye"));
 
     public JLayeredPane addStore(JLayeredPane layeredPane) {
+        RectanglePanel rectanglePanel = new RectanglePanel();
+        rectanglePanel.setBounds(0, 0, 500, 500);
+        layeredPane.add(rectanglePanel, Integer.valueOf(0));
+
         JLabel labelStoreHeadline = new JLabel();
+        JLabel labelTotalScore = new JLabel("points: " + totalScore);
+        JLabel labelHighScore = new JLabel("high score: " + highScore);
         JLabel labelSkinBundle_StarWars = new JLabel();
         JLabel labelSkinBundle_SpaceShuttle = new JLabel();
-        JLabel labelSkinBundle_Organic = new JLabel();
+        JLabel labelSkinBundle_AlienEye = new JLabel();
         JLabel labelCurrentSkin = new JLabel();
         JLabel labelReset = new JLabel("reset");
         JLabel labelBuyButton = new JLabel("buy", SwingUtilities.CENTER);
         JLabel labelEquipButton = new JLabel("equip", SwingUtilities.CENTER);
-        JLabel labelTotalScore = new JLabel("points: " + totalScore);
 
         ImageIcon imageStoreHeadline = new ImageIcon(".\\src\\Resources\\Sprites\\store_headline.png");
         ImageIcon imageDefaultBundle = new ImageIcon(properties.getProperty("lastSkin"));
         ImageIcon imageStarWarsBundle = new ImageIcon(".\\src\\Resources\\Sprites\\skins\\star_wars_bundle.png");
-
-        ImageIcon imageTemplateSkins = new ImageIcon(".\\src\\Resources\\Sprites\\template_skins.png");
+        ImageIcon imageAlienEyeBundle = new ImageIcon(".\\src\\Resources\\Sprites\\skins\\alien_eye_bundle.png");
 
         labelStoreHeadline.setIcon(imageStoreHeadline);
-        labelSkinBundle_StarWars.setIcon(imageStarWarsBundle);
         labelCurrentSkin.setIcon(imageDefaultBundle);
-
-        labelSkinBundle_SpaceShuttle.setIcon(imageTemplateSkins);
-        labelSkinBundle_Organic.setIcon(imageTemplateSkins);
+        labelSkinBundle_StarWars.setIcon(imageStarWarsBundle);
+        labelSkinBundle_AlienEye.setIcon(imageAlienEyeBundle);
 
         labelStoreHeadline.setBounds(0, 0, 500, 100);
-        labelTotalScore.setBounds(30,75,250,25);
+        labelTotalScore.setBounds(30, 75, 250, 25);
+        labelHighScore.setBounds(230, 75, 250, 25);
         labelSkinBundle_StarWars.setBounds(30, 100, 300, 50);
-        labelSkinBundle_SpaceShuttle.setBounds(30, 175, 300, 50);
-        labelSkinBundle_Organic.setBounds(30, 250, 300, 50);
+        labelSkinBundle_AlienEye.setBounds(30, 175, 300, 50);
+        labelSkinBundle_SpaceShuttle.setBounds(30, 250, 300, 50);
         labelCurrentSkin.setBounds(30, 325, 300, 50);
-        labelReset.setBounds(360,338,250,25);
+        labelReset.setBounds(360, 338, 250, 25);
         labelBuyButton.setBounds(165, 400, 60, 25);
         labelEquipButton.setBounds(245, 400, 90, 25);
-
 
         labelCurrentSkin.setBorder(new LineBorder(Color.GREEN, 4));
 
         Font retro = new Font("Retro Computer", Font.BOLD, 20);
+        labelTotalScore.setFont(retro);
+        labelHighScore.setFont(retro);
         labelBuyButton.setFont(retro);
         labelEquipButton.setFont(retro);
-        labelTotalScore.setFont(retro);
         labelReset.setFont(retro);
 
+        labelTotalScore.setForeground(Color.WHITE);
+        labelHighScore.setForeground(Color.WHITE);
         labelBuyButton.setForeground(Color.WHITE);
         labelEquipButton.setForeground(Color.WHITE);
-        labelTotalScore.setForeground(Color.WHITE);
         labelReset.setForeground(Color.WHITE);
 
         layeredPane.add(labelStoreHeadline, Integer.valueOf(1));
+        layeredPane.add(labelHighScore, Integer.valueOf(1));
         layeredPane.add(labelSkinBundle_StarWars, Integer.valueOf(1));
         layeredPane.add(labelSkinBundle_SpaceShuttle, Integer.valueOf(1));
-        layeredPane.add(labelSkinBundle_Organic, Integer.valueOf(1));
+        layeredPane.add(labelSkinBundle_AlienEye, Integer.valueOf(1));
         layeredPane.add(labelCurrentSkin, Integer.valueOf(1));
         layeredPane.add(labelReset, Integer.valueOf(1));
         layeredPane.add(labelBuyButton, Integer.valueOf(1));
@@ -86,17 +93,17 @@ public class StoreScreen {
             public void mouseClicked(MouseEvent e) {
                 playButtonSelectSound();
                 price = 1000000;
-                labelSkinBundle_StarWars.setBorder(lineBorderRED);
+                labelSkinBundle_StarWars.setBorder(lineBorderGRAY);
                 labelSkinBundle_SpaceShuttle.setBorder(null);
-                labelSkinBundle_Organic.setBorder(null);
+                labelSkinBundle_AlienEye.setBorder(null);
                 clickedStarWarsBundle = true;
                 clickedSpaceShuttleBundle = false;
-                clickedOrganicBundle = false;
+                clickedAlienEyeBundle = false;
             }
 
             @Override
             public void mouseEntered(MouseEvent e) {
-                if(!clickedStarWarsBundle) {
+                if (!clickedStarWarsBundle) {
                     playButtonHoverSound();
                     labelSkinBundle_StarWars.setBorder(lineBorderWHITE);
                 }
@@ -104,8 +111,37 @@ public class StoreScreen {
 
             @Override
             public void mouseExited(MouseEvent e) {
-                if(!clickedStarWarsBundle) {
+                if (!clickedStarWarsBundle) {
                     labelSkinBundle_StarWars.setBorder(null);
+                }
+            }
+        });
+
+        labelSkinBundle_AlienEye.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                playButtonSelectSound();
+                price = 69420;
+                labelSkinBundle_StarWars.setBorder(null);
+                labelSkinBundle_SpaceShuttle.setBorder(null);
+                labelSkinBundle_AlienEye.setBorder(lineBorderGRAY);
+                clickedStarWarsBundle = false;
+                clickedSpaceShuttleBundle = false;
+                clickedAlienEyeBundle = true;
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                if (!clickedAlienEyeBundle) {
+                    playButtonHoverSound();
+                    labelSkinBundle_AlienEye.setBorder(lineBorderWHITE);
+                }
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                if (!clickedAlienEyeBundle) {
+                    labelSkinBundle_AlienEye.setBorder(null);
                 }
             }
         });
@@ -115,16 +151,16 @@ public class StoreScreen {
             public void mouseClicked(MouseEvent e) {
                 playButtonSelectSound();
                 labelSkinBundle_StarWars.setBorder(null);
-                labelSkinBundle_SpaceShuttle.setBorder(lineBorderRED);
-                labelSkinBundle_Organic.setBorder(null);
+                labelSkinBundle_SpaceShuttle.setBorder(lineBorderGRAY);
+                labelSkinBundle_AlienEye.setBorder(null);
                 clickedStarWarsBundle = false;
                 clickedSpaceShuttleBundle = true;
-                clickedOrganicBundle = false;
+                clickedAlienEyeBundle = false;
             }
 
             @Override
             public void mouseEntered(MouseEvent e) {
-                if(!clickedSpaceShuttleBundle) {
+                if (!clickedSpaceShuttleBundle) {
                     playButtonHoverSound();
                     labelSkinBundle_SpaceShuttle.setBorder(lineBorderWHITE);
                 }
@@ -132,36 +168,8 @@ public class StoreScreen {
 
             @Override
             public void mouseExited(MouseEvent e) {
-                if(!clickedSpaceShuttleBundle) {
+                if (!clickedSpaceShuttleBundle) {
                     labelSkinBundle_SpaceShuttle.setBorder(null);
-                }
-            }
-        });
-
-        labelSkinBundle_Organic.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                playButtonSelectSound();
-                labelSkinBundle_StarWars.setBorder(null);
-                labelSkinBundle_SpaceShuttle.setBorder(null);
-                labelSkinBundle_Organic.setBorder(lineBorderRED);
-                clickedStarWarsBundle = false;
-                clickedSpaceShuttleBundle = false;
-                clickedOrganicBundle = true;
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                if(!clickedOrganicBundle) {
-                    playButtonHoverSound();
-                    labelSkinBundle_Organic.setBorder(lineBorderWHITE);
-                }
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                if(!clickedOrganicBundle) {
-                    labelSkinBundle_Organic.setBorder(null);
                 }
             }
         });
@@ -169,13 +177,24 @@ public class StoreScreen {
         labelBuyButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if(clickedStarWarsBundle && totalScore >= price && !boughtStarWars) {
+                if (clickedStarWarsBundle && totalScore >= price && !boughtStarWars) {
                     playCashRegisterSound();
-                    totalScore -= 1000000;
+                    totalScore -= price;
                     boughtStarWars = true;
 
                     properties.setProperty("totalScore", String.valueOf(totalScore));
                     properties.setProperty("boughtStarWars", String.valueOf(boughtStarWars));
+                    PropertySaver.saveProperties(properties);
+
+                    labelTotalScore.setText("points: " + totalScore);
+
+                } else if (clickedAlienEyeBundle && totalScore >= price && !boughtAlienEye) {
+                    playCashRegisterSound();
+                    totalScore -= price;
+                    boughtAlienEye = true;
+
+                    properties.setProperty("totalScore", String.valueOf(totalScore));
+                    properties.setProperty("boughtAlienEye", String.valueOf(boughtAlienEye));
                     PropertySaver.saveProperties(properties);
 
                     labelTotalScore.setText("points: " + totalScore);
@@ -205,10 +224,21 @@ public class StoreScreen {
                     properties.setProperty("enemyPath", ".\\src\\Resources\\sprites\\skins\\star_wars_enemy.png");
                     properties.setProperty("beamPath", ".\\src\\Resources\\sprites\\skins\\star_wars_beam.png");
                     properties.setProperty("lastSkin", ".\\src\\Resources\\sprites\\skins\\star_wars_bundle.png");
+                    properties.setProperty("shotSound",".\\src\\Resources\\sounds\\snd_star_wars_laser.wav");
 
                     PropertySaver.saveProperties(properties);
 
                     labelCurrentSkin.setIcon(imageStarWarsBundle);
+                } else if (clickedAlienEyeBundle && boughtAlienEye) {
+                    playButtonSelectSound();
+                    properties.setProperty("playerPath", ".\\src\\Resources\\sprites\\skins\\alien_eye_player.png");
+                    properties.setProperty("enemyPath", ".\\src\\Resources\\sprites\\skins\\alien_eye_enemy.png");
+                    properties.setProperty("beamPath", ".\\src\\Resources\\sprites\\skins\\alien_eye_beam.png");
+                    properties.setProperty("lastSkin", ".\\src\\Resources\\sprites\\skins\\alien_eye_bundle.png");
+
+                    PropertySaver.saveProperties(properties);
+
+                    labelCurrentSkin.setIcon(imageAlienEyeBundle);
                 } else {
                     playAccessDeniedSound();
                 }
@@ -238,6 +268,7 @@ public class StoreScreen {
                 properties.setProperty("enemyPath", ".\\src\\Resources\\sprites\\skins\\default_enemy.png");
                 properties.setProperty("beamPath", ".\\src\\Resources\\sprites\\skins\\default_beam.png");
                 properties.setProperty("lastSkin", ".\\src\\Resources\\sprites\\skins\\default_skin_bundle.png");
+                properties.setProperty("shotSound",".\\src\\Resources\\sounds\\snd_laser.wav");
 
                 PropertySaver.saveProperties(properties);
             }
@@ -312,6 +343,33 @@ public class StoreScreen {
 
         } catch (Exception ex) {
             ex.printStackTrace();
+        }
+    }
+
+    private static class RectanglePanel extends JPanel {
+        Point[] pixel;
+
+        public RectanglePanel() {
+            pixel = new Point[1000];
+
+            for (int i = 0; i < pixel.length; i++) {
+                pixel[i] = new Point((int) (Math.random() * 500), (int) (Math.random() * 500));
+            }
+        }
+
+        public void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            g.setColor(Color.BLACK);
+            g.fillRect(0, 0, 500, 500);
+
+            g.setColor(Color.WHITE);
+            for (Point point : pixel) {
+                g.fillRect(point.x, point.y, 1, 1);
+            }
+
+            g.drawLine(0, 76, 500, 76);
+            g.drawLine(0, 100, 500, 100);
+            g.drawLine(0, 390, 500, 390);
         }
     }
 }
