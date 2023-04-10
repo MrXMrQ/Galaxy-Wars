@@ -20,13 +20,14 @@ public class TitleScreen {
     public MyScreen myScreen;
     public Game game;
     public boolean remove, inMenu = true;
-    public Properties properties;
+
 
     public JLayeredPane layeredPane;
     private final Thread gameOverThread, thread, scoreThread;
     private JLabel labelReady, labelPause, labelScore;
-
     private Clip clip;
+    private final Properties properties = PropertySaver.loadProperties();
+    private final int menuVolume = Integer.parseInt(properties.getProperty("menuVolume"));
 
 
     public TitleScreen() {
@@ -37,8 +38,6 @@ public class TitleScreen {
         myScreen.setIconImage(icon.getImage());
 
         layeredPane = myScreen.getLayeredPane();
-
-        properties = PropertySaver.loadProperties();
 
         addMenu();
 
@@ -160,6 +159,7 @@ public class TitleScreen {
         JLabel labelStartButton = new JLabel("start", SwingConstants.CENTER);
         JLabel labelOptionsButton = new JLabel("options", SwingConstants.CENTER);
         JLabel labelStoreButton = new JLabel("store", SwingConstants.CENTER);
+        JLabel labelExitButton = new JLabel("x", SwingConstants.CENTER);
 
         ImageIcon imageHeadline = new ImageIcon(".\\src\\Resources\\Sprites\\galaxy_wars.png");
 
@@ -168,20 +168,24 @@ public class TitleScreen {
         labelStartButton.setFont(new Font("Retro Computer", Font.BOLD, 20));
         labelStoreButton.setFont(new Font("Retro Computer", Font.BOLD, 20));
         labelOptionsButton.setFont(new Font("Retro Computer", Font.BOLD, 20));
+        labelExitButton.setFont(new Font("Retro Computer", Font.BOLD, 20));
 
         labelStartButton.setForeground(Color.WHITE);
         labelStoreButton.setForeground(Color.WHITE);
         labelOptionsButton.setForeground(Color.WHITE);
+        labelExitButton.setForeground(Color.WHITE);
 
         labelHeadline.setBounds(0, 0, 500, 100);
         labelStartButton.setBounds(50, 230, 100, 50);
         labelOptionsButton.setBounds(150, 230, 200, 50);
         labelStoreButton.setBounds(350, 230, 100, 50);
+        labelExitButton.setBounds(225,420,50,50);
 
         layeredPane.add(labelHeadline, Integer.valueOf(1));
         layeredPane.add(labelStartButton, Integer.valueOf(1));
         layeredPane.add(labelOptionsButton, Integer.valueOf(1));
         layeredPane.add(labelStoreButton, Integer.valueOf(1));
+        layeredPane.add(labelExitButton, Integer.valueOf(1));
 
         labelStartButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -216,7 +220,10 @@ public class TitleScreen {
         labelOptionsButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                clip.stop();
                 playButtonSelectSound();
+                layeredPane.removeAll();
+                addOption();
             }
 
             @Override
@@ -252,7 +259,59 @@ public class TitleScreen {
             }
         });
 
+        labelExitButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                playButtonSelectSound();
+                System.exit(1);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                playButtonHoverSound();
+                labelExitButton.setForeground(Color.YELLOW);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                labelExitButton.setForeground(Color.WHITE);
+            }
+        });
         layeredPane.repaint();
+    }
+
+    public void addOption() {
+        inMenu = true;
+
+        JLabel labelBackButton = new JLabel("<-", SwingUtilities.CENTER);
+        labelBackButton.setBounds(30, 400, 50, 25);
+        labelBackButton.setFont(new Font("Retro Computer", Font.BOLD, 20));
+        labelBackButton.setForeground(Color.WHITE);
+        layeredPane.add(labelBackButton, Integer.valueOf(1));
+
+        labelBackButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                playBackgroundMusic();
+                playButtonSelectSound();
+                layeredPane.removeAll();
+                layeredPane.repaint();
+                addMenu();
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                playButtonHoverSound();
+                labelBackButton.setForeground(Color.YELLOW);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                labelBackButton.setForeground(Color.WHITE);
+            }
+        });
+
+        layeredPane = new OptionScreen().addOption(layeredPane);
     }
 
     public void addStore() {
@@ -412,7 +471,7 @@ public class TitleScreen {
             Clip clip = AudioSystem.getClip();
             clip.open(audioInputStream);
             FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            gainControl.setValue(-20.0f);
+            gainControl.setValue(menuVolume - 20);
             clip.start();
 
         } catch (Exception ex) {
@@ -426,6 +485,8 @@ public class TitleScreen {
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
             Clip clip = AudioSystem.getClip();
             clip.open(audioInputStream);
+            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            gainControl.setValue(menuVolume);
             clip.start();
 
         } catch (Exception ex) {
@@ -440,7 +501,7 @@ public class TitleScreen {
             clip = AudioSystem.getClip();
             clip.open(audioInputStream);
             FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            gainControl.setValue(-20.0f);
+            gainControl.setValue(menuVolume - 14);
             clip.loop(Clip.LOOP_CONTINUOUSLY);
 
         } catch (Exception ex) {

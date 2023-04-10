@@ -44,6 +44,7 @@ public class Game extends JPanel {
     private final Image imageEnemy = Toolkit.getDefaultToolkit().getImage(properties.getProperty("enemyPath"));
     private final Image imageBeam = Toolkit.getDefaultToolkit().getImage(properties.getProperty("beamPath"));
     private final String shotSound = properties.getProperty("shotSound");
+    private final int gameVolume = Integer.parseInt(properties.getProperty("gameVolume"));
 
 
     public Game() {
@@ -72,6 +73,8 @@ public class Game extends JPanel {
         collisonThread = new Thread(this::collision);
 
         pixel = new Point[1000];
+
+        setFocusable(true);
 
         for (int i = 0; i < pixel.length; i++) {
             pixel[i] = new Point((int) (Math.random() * 500), (int) (Math.random() * 500));
@@ -281,7 +284,7 @@ public class Game extends JPanel {
                     clip.open(audioInputStream);
 
                     FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-                    gainControl.setValue(-16.0f);
+                    gainControl.setValue(gameVolume);
 
                     clip.start();
                 } catch (Exception ex) {
@@ -295,7 +298,7 @@ public class Game extends JPanel {
                         Clip clip = AudioSystem.getClip();
                         clip.open(audioInputStream);
                         FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-                        gainControl.setValue(-16.0f);
+                        gainControl.setValue(gameVolume);
                         clip.start();
 
                     } catch (Exception ex) {
@@ -334,7 +337,7 @@ public class Game extends JPanel {
             Clip clip = AudioSystem.getClip();
             clip.open(audioInputStream);
             FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            gainControl.setValue(-22.0f);
+            gainControl.setValue(gameVolume - 4);
             clip.start();
 
         } catch (Exception ex) {
@@ -354,7 +357,7 @@ public class Game extends JPanel {
                 Clip clip = AudioSystem.getClip();
                 clip.open(audioInputStream);
                 FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-                gainControl.setValue(-16.0f);
+                gainControl.setValue(gameVolume);
                 clip.start();
 
             } catch (Exception ex) {
@@ -387,7 +390,7 @@ public class Game extends JPanel {
                         Clip clip = AudioSystem.getClip();
                         clip.open(audioInputStream);
                         FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-                        gainControl.setValue(-22.0f);
+                        gainControl.setValue(gameVolume - 8);
                         clip.start();
 
                     } catch (Exception ex) {

@@ -24,6 +24,7 @@ public class StoreScreen {
     private final int highScore = Integer.parseInt(properties.getProperty("highScore"));
     private boolean boughtStarWars = Boolean.parseBoolean(properties.getProperty("boughtStarWars"));
     private boolean boughtAlienEye = Boolean.parseBoolean(properties.getProperty("boughtAlienEye"));
+    private final int storeVolume = Integer.parseInt(properties.getProperty("storeVolume"));
 
     public JLayeredPane addStore(JLayeredPane layeredPane) {
         RectanglePanel rectanglePanel = new RectanglePanel();
@@ -224,21 +225,22 @@ public class StoreScreen {
                     properties.setProperty("enemyPath", ".\\src\\Resources\\sprites\\skins\\star_wars_enemy.png");
                     properties.setProperty("beamPath", ".\\src\\Resources\\sprites\\skins\\star_wars_beam.png");
                     properties.setProperty("lastSkin", ".\\src\\Resources\\sprites\\skins\\star_wars_bundle.png");
-                    properties.setProperty("shotSound",".\\src\\Resources\\sounds\\snd_star_wars_laser.wav");
+                    properties.setProperty("shotSound", ".\\src\\Resources\\sounds\\snd_star_wars_laser.wav");
 
                     PropertySaver.saveProperties(properties);
-
                     labelCurrentSkin.setIcon(imageStarWarsBundle);
+
                 } else if (clickedAlienEyeBundle && boughtAlienEye) {
                     playButtonSelectSound();
                     properties.setProperty("playerPath", ".\\src\\Resources\\sprites\\skins\\alien_eye_player.png");
                     properties.setProperty("enemyPath", ".\\src\\Resources\\sprites\\skins\\alien_eye_enemy.png");
                     properties.setProperty("beamPath", ".\\src\\Resources\\sprites\\skins\\alien_eye_beam.png");
                     properties.setProperty("lastSkin", ".\\src\\Resources\\sprites\\skins\\alien_eye_bundle.png");
+                    properties.setProperty("shotSound", ".\\src\\Resources\\sounds\\snd_laser.wav");
 
                     PropertySaver.saveProperties(properties);
-
                     labelCurrentSkin.setIcon(imageAlienEyeBundle);
+
                 } else {
                     playAccessDeniedSound();
                 }
@@ -268,7 +270,7 @@ public class StoreScreen {
                 properties.setProperty("enemyPath", ".\\src\\Resources\\sprites\\skins\\default_enemy.png");
                 properties.setProperty("beamPath", ".\\src\\Resources\\sprites\\skins\\default_beam.png");
                 properties.setProperty("lastSkin", ".\\src\\Resources\\sprites\\skins\\default_skin_bundle.png");
-                properties.setProperty("shotSound",".\\src\\Resources\\sounds\\snd_laser.wav");
+                properties.setProperty("shotSound", ".\\src\\Resources\\sounds\\snd_laser.wav");
 
                 PropertySaver.saveProperties(properties);
             }
@@ -295,7 +297,7 @@ public class StoreScreen {
             Clip clip = AudioSystem.getClip();
             clip.open(audioInputStream);
             FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            gainControl.setValue(-20.0f);
+            gainControl.setValue(storeVolume - 20);
             clip.start();
 
         } catch (Exception ex) {
@@ -309,6 +311,8 @@ public class StoreScreen {
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
             Clip clip = AudioSystem.getClip();
             clip.open(audioInputStream);
+            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            gainControl.setValue(storeVolume);
             clip.start();
 
         } catch (Exception ex) {
@@ -323,7 +327,7 @@ public class StoreScreen {
             Clip clip = AudioSystem.getClip();
             clip.open(audioInputStream);
             FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            gainControl.setValue(-20.0f);
+            gainControl.setValue(storeVolume);
             clip.start();
 
         } catch (Exception ex) {
@@ -338,7 +342,7 @@ public class StoreScreen {
             Clip clip = AudioSystem.getClip();
             clip.open(audioInputStream);
             FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            gainControl.setValue(-20.0f);
+            gainControl.setValue(storeVolume);
             clip.start();
 
         } catch (Exception ex) {
