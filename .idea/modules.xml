@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/GalaxyWars.iml" filepath="$PROJECT_DIR$/GalaxyWars.iml" />
+      <module fileurl="file://$PROJECT_DIR$/galaxy_wars.iml" filepath="$PROJECT_DIR$/galaxy_wars.iml" />
     </modules>
   </component>
 </project>
